@@ -1,0 +1,2498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<title>111 Partners OS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;--bg2:#f8f9fb;--bg3:#f1f3f7;
+  --border:#e5e7eb;--border2:#d1d5db;
+  --ink:#111827;--ink2:#374151;--sub:#6b7280;--mute:#9ca3af;
+  --blue:#3b82f6;--blue2:#2563eb;--blue-bg:#eff6ff;--blue-border:#bfdbfe;
+  --green:#10b981;--green-bg:#ecfdf5;
+  --yellow:#f59e0b;--yellow-bg:#fffbeb;
+  --red:#ef4444;--red-bg:#fef2f2;
+  --purple:#8b5cf6;--purple-bg:#f5f3ff;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06);
+  --shadow2:0 4px 12px rgba(0,0,0,.08),0 2px 4px rgba(0,0,0,.05);
+  --r:8px;--r2:12px;
+}
+html,body{height:100%;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px}
+button{cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif}
+input,select,textarea{font-family:'Inter',sans-serif}
+a{color:inherit;text-decoration:none}
+
+/* LAYOUT */
+#app{display:flex;height:100vh;overflow:hidden}
+#sb{width:240px;min-width:240px;background:var(--bg);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh;flex-shrink:0;transition:width .2s,min-width .2s;overflow:hidden}
+#sb.col{width:56px;min-width:56px}
+#main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;min-width:0}
+#topbar{height:52px;min-height:52px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:var(--bg);flex-shrink:0;z-index:10}
+#content{flex:1;overflow-y:auto;overflow-x:hidden;background:var(--bg2)}
+
+/* SIDEBAR */
+.sb-brand{padding:18px 16px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+.sb-name{font-size:15px;font-weight:700;color:var(--ink);letter-spacing:-.02em}
+.sb-tag{font-size:10px;color:var(--mute);letter-spacing:.04em;margin-top:2px;font-family:'DM Mono',monospace}
+#sb.col .sb-brand{padding:16px 0;text-align:center}
+#sb.col .sb-tag{display:none}
+.sb-nav{flex:1;padding:8px 8px;overflow-y:auto}
+.sb-section{margin-bottom:4px}
+.sb-section-label{font-size:9px;font-weight:600;color:var(--mute);letter-spacing:.08em;text-transform:uppercase;padding:8px 8px 4px;display:block}
+#sb.col .sb-section-label{display:none}
+.sb-item{display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:6px;color:var(--sub);font-size:13px;font-weight:500;cursor:pointer;transition:all .12s;white-space:nowrap;width:100%;text-align:left}
+.sb-item:hover{background:var(--bg2);color:var(--ink)}
+.sb-item.on{background:var(--blue-bg);color:var(--blue2)}
+.sb-icon{font-size:14px;flex-shrink:0;width:18px;text-align:center}
+#sb.col .sb-item{justify-content:center;padding:8px 0}
+#sb.col .sb-label{display:none}
+.sb-footer{padding:12px 16px;border-top:1px solid var(--border);flex-shrink:0}
+.sb-version{font-size:10px;color:var(--mute);font-family:'DM Mono',monospace}
+#sb.col .sb-footer{display:none}
+.sv-row{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mute)}
+.sv-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0}
+
+/* TOPBAR */
+.tb-left{display:flex;align-items:center;gap:12px}
+.tb-toggle{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--sub);transition:all .12s;font-size:16px}
+.tb-toggle:hover{background:var(--bg2);color:var(--ink)}
+.tb-title{font-size:14px;font-weight:600;color:var(--ink);letter-spacing:-.01em}
+.tb-right{display:flex;align-items:center;gap:10px}
+.tb-search{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:6px 12px;width:220px;transition:all .15s}
+.tb-search:focus-within{border-color:var(--blue);background:var(--bg);box-shadow:0 0 0 3px var(--blue-bg)}
+.tb-search input{border:none;background:none;outline:none;font-size:13px;color:var(--ink);width:100%}
+.tb-search input::placeholder{color:var(--mute)}
+.tb-avatar{width:30px;height:30px;border-radius:50%;background:var(--blue-bg);border:2px solid var(--blue-border);color:var(--blue2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+
+/* PAGE */
+.page{padding:28px 28px 80px;animation:fadeIn .18s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+.page-header{margin-bottom:24px}
+.page-title{font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-.03em;line-height:1.2}
+.page-sub{font-size:13px;color:var(--sub);margin-top:4px}
+
+/* CARDS */
+.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:20px;box-shadow:var(--shadow)}
+.card-sm{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--shadow)}
+
+/* STAT CARDS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+.stat{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:16px 18px;box-shadow:var(--shadow)}
+.stat-label{font-size:11px;font-weight:600;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.stat-val{font-size:26px;font-weight:700;color:var(--ink);letter-spacing:-.04em;line-height:1}
+.stat-sub{font-size:11px;color:var(--mute);margin-top:5px}
+.stat-accent{border-left:3px solid var(--blue)}
+
+/* GRIDS */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.grid-auto{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+@media(max-width:900px){.grid2,.grid3{grid-template-columns:1fr}.grid-auto{grid-template-columns:1fr}}
+
+/* SECTION HEADER */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sh h2{font-size:15px;font-weight:600;color:var(--ink);letter-spacing:-.02em}
+.sh-sub{font-size:12px;color:var(--mute);margin-top:2px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;border-radius:7px;padding:7px 14px;font-size:13px;font-weight:500;cursor:pointer;transition:all .12s;border:none;font-family:'Inter',sans-serif}
+.btn:hover{opacity:.88}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-secondary{background:var(--bg);color:var(--ink2);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--bg2)}
+.btn-ghost{background:transparent;color:var(--sub);padding:6px 10px}
+.btn-ghost:hover{background:var(--bg2);color:var(--ink)}
+.btn-danger{background:var(--red-bg);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.btn-sm{padding:5px 10px;font-size:12px;border-radius:6px}
+.btn-xs{padding:3px 8px;font-size:11px;border-radius:5px}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:500;letter-spacing:.01em}
+.badge-blue{background:var(--blue-bg);color:var(--blue2);border:1px solid var(--blue-border)}
+.badge-green{background:var(--green-bg);color:#059669;border:1px solid #a7f3d0}
+.badge-yellow{background:var(--yellow-bg);color:#d97706;border:1px solid #fde68a}
+.badge-red{background:var(--red-bg);color:var(--red);border:1px solid #fecaca}
+.badge-purple{background:var(--purple-bg);color:var(--purple);border:1px solid #ddd6fe}
+.badge-gray{background:var(--bg3);color:var(--sub);border:1px solid var(--border)}
+
+/* TABLES */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{text-align:left;padding:8px 12px;color:var(--mute);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);background:var(--bg2)}
+.tbl td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--ink2)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tbody tr:hover td{background:var(--bg2)}
+.tbl-wrap{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;box-shadow:var(--shadow)}
+
+/* CLIENT CARDS */
+.client-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:18px;cursor:pointer;transition:all .15s;box-shadow:var(--shadow)}
+.client-card:hover{border-color:var(--blue-border);box-shadow:var(--shadow2);transform:translateY(-1px)}
+.client-avatar{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;margin-bottom:12px}
+.client-name{font-size:15px;font-weight:600;color:var(--ink);letter-spacing:-.01em;margin-bottom:3px}
+.client-role{font-size:12px;color:var(--sub);margin-bottom:10px}
+
+/* TABS */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:22px}
+.tab-btn{padding:8px 14px;font-size:13px;font-weight:500;color:var(--sub);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .12s;background:none;border-top:none;border-left:none;border-right:none}
+.tab-btn:hover{color:var(--ink)}
+.tab-btn.on{color:var(--blue2);border-bottom-color:var(--blue)}
+.tab-panel{display:none}.tab-panel.on{display:block}
+
+/* FORMS */
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:12px;font-weight:500;color:var(--ink2);margin-bottom:5px}
+.form-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:7px;color:var(--ink);padding:8px 12px;font-size:13px;outline:none;transition:border-color .12s;font-family:'Inter',sans-serif}
+.form-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-bg)}
+select.form-input option{background:var(--bg)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px}
+.modal{background:var(--bg);border:1px solid var(--border);border-radius:14px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--border)}
+.modal-title{font-size:16px;font-weight:600;color:var(--ink)}
+.modal-body{padding:22px}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+
+/* PIPELINE */
+.pipeline{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px}
+.pipeline-col{min-width:200px;flex-shrink:0}
+.pipeline-header{font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.pipeline-count{background:var(--bg3);color:var(--mute);border-radius:99px;padding:1px 7px;font-size:10px}
+.pipeline-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:all .12s}
+.pipeline-card:hover{border-color:var(--blue-border);box-shadow:var(--shadow)}
+
+/* DETAIL VIEW */
+.detail-header{background:var(--bg);border-bottom:1px solid var(--border);padding:22px 28px 0}
+.detail-back{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--sub);cursor:pointer;margin-bottom:14px;width:fit-content}
+.detail-back:hover{color:var(--blue)}
+.detail-name{font-size:24px;font-weight:700;color:var(--ink);letter-spacing:-.03em;margin-bottom:4px}
+.detail-meta{font-size:13px;color:var(--sub);margin-bottom:16px}
+
+/* PRIORITY TASK */
+.task-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.task-row:last-child{border-bottom:none}
+.task-check{width:16px;height:16px;border:1.5px solid var(--border2);border-radius:4px;flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s}
+.task-check.done{background:var(--green);border-color:var(--green)}
+.task-title{font-size:13px;color:var(--ink2);flex:1;min-width:0}
+.task-title.done{text-decoration:line-through;color:var(--mute)}
+.task-due{font-size:11px;color:var(--mute);font-family:'DM Mono',monospace;white-space:nowrap}
+.task-due.urgent{color:var(--red)}
+
+/* FINANCIAL */
+.fin-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)}
+.fin-row:last-child{border-bottom:none}
+.fin-label{font-size:13px;color:var(--ink2)}
+.fin-val{font-size:13px;font-weight:600;color:var(--ink);font-family:'DM Mono',monospace}
+.fin-flag{font-size:10px;color:var(--yellow);margin-left:6px}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:40px 20px;color:var(--mute)}
+.empty-icon{font-size:28px;margin-bottom:10px;opacity:.4}
+.empty-text{font-size:13px}
+
+/* SONG TABLE */
+.song-status-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:6px}
+
+/* ACTIVITY */
+.activity-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.activity-item:last-child{border-bottom:none}
+.activity-dot{width:8px;height:8px;border-radius:50%;background:var(--blue-border);border:2px solid var(--blue);flex-shrink:0;margin-top:4px}
+.activity-text{font-size:13px;color:var(--ink2);flex:1}
+.activity-time{font-size:11px;color:var(--mute);font-family:'DM Mono',monospace;white-space:nowrap}
+
+/* REPRESENTATION BADGES */
+.rep-excl{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
+.rep-nonexcl{background:#fefce8;color:#a16207;border:1px solid #fde047}
+.rep-strategic{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
+.rep-founder{background:#fdf4ff;color:#7e22ce;border:1px solid #e9d5ff}
+.rep-advisor{background:#f8fafc;color:#475569;border:1px solid #cbd5e1}
+
+/* 1DRM IMPRINT */
+.imprint-header{background:linear-gradient(135deg,#0f0f17 0%,#1a1a2e 100%);border-radius:var(--r2);padding:28px;color:#fff;margin-bottom:20px}
+.imprint-title{font-size:26px;font-weight:700;letter-spacing:-.03em;color:#fff}
+.imprint-sub{font-size:13px;color:rgba(255,255,255,.5);margin-top:4px}
+.imprint-nav{display:flex;gap:6px;margin-top:18px;flex-wrap:wrap}
+.imprint-nav-btn{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);transition:all .12s;font-family:Inter,sans-serif}
+.imprint-nav-btn:hover,.imprint-nav-btn.on{background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.3)}
+
+/* CALENDAR */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-day-hd{font-size:10px;font-weight:600;color:var(--mute);text-align:center;padding:4px 0;text-transform:uppercase;letter-spacing:.04em}
+.cal-cell{min-height:72px;padding:5px 6px;border-radius:6px;background:var(--bg);border:1px solid var(--border);cursor:pointer;transition:border-color .12s}
+.cal-cell:hover{border-color:var(--blue)}
+.cal-cell.today{background:var(--blue-bg);border-color:var(--blue)}
+.cal-num{font-size:12px;color:var(--sub);margin-bottom:3px}
+.cal-cell.today .cal-num{color:var(--blue2);font-weight:700}
+.cal-event{font-size:9px;background:var(--blue-bg);color:var(--blue2);padding:1px 4px;border-radius:3px;margin-bottom:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.cal-event.task{background:var(--red-bg);color:var(--red)}
+.cal-event.venture{background:var(--purple-bg);color:var(--purple)}
+
+/* DOCUMENT TREE */
+.doc-client-section{margin-bottom:20px}
+.doc-client-hd{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--bg2);border-radius:8px;cursor:pointer;border:1px solid var(--border);margin-bottom:8px}
+.doc-client-name{font-size:13px;font-weight:600;color:var(--ink);flex:1}
+.doc-item{display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid var(--border);transition:background .1s}
+.doc-item:hover{background:var(--bg2)}
+.doc-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.doc-title{font-size:13px;color:var(--ink);flex:1}
+.doc-cat{font-size:10px;color:var(--mute)}
+.doc-open{font-size:11px;color:var(--blue2);text-decoration:none;border-bottom:1px solid var(--blue-border)}
+.doc-open:hover{opacity:.7}
+
+/* FINANCIAL INPUT */
+.fin-input{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:13px;font-family:DM Mono,monospace;font-weight:600;color:var(--ink);width:140px;outline:none;transition:border-color .12s}
+.fin-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-bg)}
+.fin-status-needs{color:var(--yellow);background:var(--yellow-bg);border-color:#fde68a}
+.fin-status-proposed{color:var(--sub);background:var(--bg3);border-color:var(--border2)}
+.fin-status-agreed{color:var(--blue2);background:var(--blue-bg);border-color:var(--blue-border)}
+.fin-status-invoiced{color:var(--purple);background:var(--purple-bg);border-color:#ddd6fe}
+.fin-status-collected{color:var(--green);background:var(--green-bg);border-color:#a7f3d0}
+.fin-status-overdue{color:var(--red);background:var(--red-bg);border-color:#fecaca}
+.fin-summary-bar{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:20px}
+.fin-summary-cell{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:14px;box-shadow:var(--shadow)}
+.fin-summary-label{font-size:10px;font-weight:600;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.fin-summary-val{font-size:20px;font-weight:700;color:var(--ink);letter-spacing:-.03em;font-family:DM Mono,monospace}
+.fin-summary-sub{font-size:10px;color:var(--mute);margin-top:3px}
+.fin-tbl .fin-edit-btn{opacity:0;transition:opacity .12s}
+.fin-tbl tr:hover .fin-edit-btn{opacity:1}
+
+/* ── MOBILE / IPHONE ───────────────────────────────────────────────── */
+#mobile-tab-bar { display: none; }
+#mob-section-scroller { display: none; }
+
+@media (max-width: 768px) {
+  /* Hide sidebar on mobile */
+  #sb { display: none !important; }
+  #main { width: 100vw; }
+
+  /* Topbar */
+  #topbar {
+    height: 54px;
+    padding: 0 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  #sb-toggle { display: none; }
+
+  /* Content padding for tab bar */
+  #content { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .page { padding: 16px 16px 100px; }
+
+  /* Single column */
+  .grid2, .grid3, .grid-auto { grid-template-columns: 1fr !important; }
+  .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 8px; }
+  .fin-summary-bar { grid-template-columns: 1fr 1fr !important; gap: 8px; }
+  .form-row, .form-row3 { grid-template-columns: 1fr !important; }
+
+  /* Typography */
+  .page-title { font-size: 19px; }
+  .stat-val { font-size: 22px; }
+
+  /* Cards */
+  .card, .card-sm { padding: 14px; }
+
+  /* Tables scroll */
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tbl { min-width: 520px; }
+  .fin-tbl .tbl { min-width: 860px; }
+
+  /* Pipeline */
+  .pipeline { gap: 8px; }
+  .pipeline-col { min-width: 175px; }
+
+  /* Modals slide up from bottom — native iOS feel */
+  .modal-bg {
+    padding: 0;
+    align-items: flex-end;
+  }
+  .modal {
+    border-radius: 18px 18px 0 0 !important;
+    max-width: 100% !important;
+    max-height: 92vh;
+    border-bottom: none;
+  }
+
+  /* Tabs scroll */
+  .tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap; flex-wrap: nowrap; }
+  .tab-btn { flex-shrink: 0; }
+
+  /* Detail */
+  .detail-header { padding: 16px 16px 0; }
+  .detail-name { font-size: 20px; }
+
+  /* Imprint */
+  .imprint-header { padding: 18px; }
+  .imprint-title { font-size: 21px; }
+  .imprint-nav { gap: 4px; }
+  .imprint-nav-btn { padding: 5px 10px; font-size: 11px; }
+
+  /* Search collapses */
+  .tb-search { width: 34px; overflow: hidden; padding: 0 8px; border-radius: 50%; height: 34px; justify-content: center; }
+  .tb-search input { display: none; }
+  .tb-search.open { width: 170px; border-radius: 7px; padding: 6px 11px; height: auto; }
+  .tb-search.open input { display: block; }
+
+  /* Touch targets */
+  .btn { min-height: 38px; }
+  .btn-sm { min-height: 34px; }
+
+  /* Bottom tab bar */
+  #mobile-tab-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    z-index: 200;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    box-shadow: 0 -2px 16px rgba(0,0,0,.08);
+  }
+  .mob-tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 4px 6px;
+    cursor: pointer;
+    color: var(--mute);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    transition: color .12s;
+    gap: 3px;
+    -webkit-tap-highlight-color: transparent;
+    border: none;
+    background: none;
+    font-family: Inter, sans-serif;
+    min-height: 52px;
+  }
+  .mob-tab.on { color: var(--blue2); }
+  .mob-tab span:first-child { font-size: 18px; line-height: 1; }
+
+  /* Horizontal section scroller */
+  #mob-section-scroller {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 6px;
+    padding: 8px 12px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 52px;
+    z-index: 90;
+  }
+  #mob-section-scroller::-webkit-scrollbar { display: none; }
+  .mob-pill {
+    flex-shrink: 0;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .03em;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--sub);
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: Inter, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    transition: background .12s, color .12s;
+  }
+  .mob-pill.on {
+    background: var(--blue2);
+    color: #fff;
+    border-color: var(--blue2);
+  }
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <nav id="sb">
+    <div class="sb-brand">
+      <div class="sb-name">111 PARTNERS</div>
+      <div class="sb-tag">TALENT · VENTURES · OWNERSHIP</div>
+    </div>
+    <div class="sb-nav" id="sb-nav"></div>
+    <div class="sb-footer">
+      <div class="sv-row"><span class="sv-dot" id="sv-dot"></span><span id="sv-txt" style="font-size:10px;font-family:'DM Mono',monospace">Connected</span></div>
+      <div class="sb-version" style="margin-top:4px">v1.0 — OS</div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <!-- MOBILE BOTTOM TAB BAR -->
+  <div id="mobile-tab-bar">
+    <button class="mob-tab on" data-mob-tab="dashboard"><span class="mob-tab-icon">⊙</span><span>Home</span></button>
+    <button class="mob-tab" data-mob-tab="talent"><span class="mob-tab-icon">◎</span><span>Talent</span></button>
+    <button class="mob-tab" data-mob-tab="deals"><span class="mob-tab-icon">◇</span><span>Deals</span></button>
+    <button class="mob-tab" data-mob-tab="ventures"><span class="mob-tab-icon">△</span><span>Ventures</span></button>
+    <button class="mob-tab" data-mob-tab="tasks"><span class="mob-tab-icon">✓</span><span>Tasks</span></button>
+  </div>
+
+  <div id="main">
+    <header id="topbar">
+      <div class="tb-left">
+        <button class="tb-toggle" id="sb-toggle">&#9776;</button>
+        <span class="tb-title" id="tb-title">Dashboard</span>
+      </div>
+      <div class="tb-right">
+        <div class="tb-search">
+          <span style="color:var(--mute);font-size:13px">&#128269;</span>
+          <input id="search-input" placeholder="Search clients, deals, songs..." autocomplete="off"/>
+        </div>
+        <div class="tb-avatar" style="font-size:9px;letter-spacing:-.5px">111</div>
+      </div>
+    </header>
+    <div id="mob-section-scroller">
+      <button class="mob-pill on" data-pill="dashboard">Home</button>
+      <button class="mob-pill" data-pill="artists">Artists</button>
+      <button class="mob-pill" data-pill="producers">Producers</button>
+      <button class="mob-pill" data-pill="creators">Creators</button>
+      <button class="mob-pill" data-pill="filmtv">Film & TV</button>
+      <button class="mob-pill" data-pill="deals">Deals</button>
+      <button class="mob-pill" data-pill="ventures">Ventures</button>
+      <button class="mob-pill" data-pill="1drm">1DRM</button>
+      <button class="mob-pill" data-pill="financials">Financials</button>
+      <button class="mob-pill" data-pill="tasks">Tasks</button>
+      <button class="mob-pill" data-pill="calendar">Calendar</button>
+      <button class="mob-pill" data-pill="documents">Docs</button>
+      <button class="mob-pill" data-pill="activity">Activity</button>
+    </div>
+    <div id="content">
+      <div id="screen" class="page"></div>
+    </div>
+  </div>
+
+</div>
+<div id="modal-root"></div>
+
+<script>
+var API = 'https://script.google.com/macros/s/AKfycbzUpEvPDPK_QLp_zRGTs-qIfe_ytX1z-AqJ9cIAH3vb_wUIbLAFOxiPLKvHTDDY9AAh/exec';
+var CAL_ID = 'c_0f4b88ce57dc88c1e09e07c86c9f5a36db7a5c155f1b0e6fb3e3b2f4291cd455@group.calendar.google.com';
+
+// ── DATA ─────────────────────────────────────────────────────────────
+var D = {
+  clients: [
+    {id:'cl1',name:'nNocent',type:'artist',relationship:'Daetrius artist alias under 1DRM; founder-owned creative IP',status:'active',representation:'founder-owned',priority:'high',color:'#8b5cf6',notes:'',fields:[],links:[]},
+    {id:'cl2',name:'CXO',type:'producer',relationship:'Music producer  --  beats, mixing, placements',status:'active',representation:'exclusive',priority:'high',color:'#3b82f6',notes:'',fields:[],links:[]},
+    {id:'cl3',name:'Epikh Pro',type:'producer',relationship:'Principal producer  --  executive creative partner',status:'active',representation:'founder-owned',priority:'high',color:'#10b981',notes:'',fields:[],links:[]},
+    {id:'cl4',name:'Damii',type:'creator',relationship:'Priority talent and venture partner',status:'active',representation:'exclusive',priority:'high',color:'#f59e0b',notes:'',fields:[],links:[]},
+    {id:'cl5',name:'Jahnte Gaming',type:'creator',relationship:'Gaming/creator client',status:'active',priority:'medium',color:'#ef4444',notes:'',fields:[],links:[]},
+    {id:'cl6',name:'Beezy Games',type:'creator',relationship:'Active brand opportunity relationship',status:'active',priority:'medium',color:'#06b6d4',notes:'',fields:[],links:[]},
+    {id:'cl7',name:'Myles Truitt',type:'filmtv',relationship:'111 client with film representation',status:'active',representation:'exclusive',priority:'high',color:'#f97316',notes:'',fields:[],links:[]},
+    {id:"cl8",name:"Da'Vinchi",type:'filmtv',relationship:'Non-exclusive strategic opportunity partner',status:'active',representation:'non-exclusive',priority:'medium',color:'#84cc16',notes:''},
+    {id:'cl9',name:'.IDK.',type:'other',relationship:'Talent strategy, career development, and opportunity creation',status:'active',representation:'strategic-partner',priority:'low',color:'#6b7280',notes:'Communications: not a current PR priority'},
+    {id:'cl10',name:'A1R',type:'other',relationship:'Athlete-influencer identity/project  --  Alex Rifkind & 1DRM ecosystem',status:'active',priority:'medium',color:'#ec4899',notes:''},
+    {id:'cl11',name:'YesJulz',type:'other',relationship:'Broader relationship/venture pipeline',status:'active',representation:'strategic-partner',priority:'low',color:'#6b7280',notes:'Not a current communications priority'},
+    {id:'cl12',name:'TY',type:'other',relationship:'Partner — 111 Partners & 1DRM. Executive team.',status:'active',representation:'founder-owned',priority:'high',color:'#6366f1',notes:'Executive team. Partner on 111 Partners and 1DRM.',fields:[{label:'Role',value:'Partner / Executive'},{label:'Companies',value:'111 Partners, 1DRM'}],links:[]}
+  ],
+  artists: [
+    {id:'ar1',clientId:'cl1',name:'nNocent',alias:'Daetrius',bio:'Atlanta-rooted artist, writer and sound architect building cinematic rap/R&B around a Christian worldview.',strategy:'Build deep faith community. Multiple genre doors: Atlanta, R&B, gospel, alternative, cinematic rap. No ceiling without hiding faith.',nextMilestone:'A Dae Chasing iNNOCENCE  --  rollout launch',focus:'Music development, artist identity, narrative & world-building, rollout strategy, editorial opportunities, strategic partnerships',notes:''}
+  ],
+  producers: [
+    {id:'pr1',clientId:'cl2',name:'CXO',role:'Producer / Mixer',specialties:'Beat production, mixing, placements',notes:''},
+    {id:'pr2',clientId:'cl3',name:'Epikh Pro',role:'Executive Producer / Principal Producer',specialties:'Sound architecture, full production, executive creative direction',notes:'Principal producer on A Dae Chasing iNNOCENCE'}
+  ],
+  creators: [
+    {id:'cr1',clientId:'cl4',name:'Damii',platforms:'Streaming, YouTube, Social',focus:'Brand deals, streaming, ONACERO, Streamer Open, entrepreneurial storytelling',notes:'Priority talent and venture partner'},
+    {id:'cr2',clientId:'cl5',name:'Jahnte Gaming',platforms:'YouTube, Twitch',focus:'Gaming campaigns, consumer brand partnerships, creator positioning, cultural activations',notes:''},
+    {id:'cr3',clientId:'cl6',name:'Beezy Games',platforms:'TBD',focus:'Brand opportunity development',notes:'Active brand opportunity relationship per brief'}
+  ],
+  filmtv: [
+    {id:'ft1',clientId:'cl7',name:'Myles Truitt',relationship:'Management client',focus:'Acting career, brand opportunities, career announcements, selective press, venture opportunities',notes:'Existing arrangement. Outside venture participation where applicable.'},
+    {id:'ft2',clientId:'cl8',name:"Da'Vinchi",relationship:'Non-exclusive strategic opportunity partner',focus:'Brand partnerships, entrepreneurial opportunities, executive production, comedy/IP concepts, cultural collaborations',notes:'111 does NOT represent his film/TV acting career.'}
+  ],
+  ventures: [
+    {id:'v1',name:'Streamer Open',category:'Entertainment IP',partners:'Damii, Yonna, Yatta, Fixated',stage:'Development',revenueModel:'Sponsorship, media rights, event',description:'Sports-meets-streaming entertainment property. Media-first event world and repeatable competitive entertainment IP.',needs:'Sponsor deck, trailer completion, brand outreach, launch strategy, partner coordination',notes:''},
+    {id:'v2',name:'ONACERO',category:'Fashion / Consumer Brand',partners:'Damii',stage:'Development',revenueModel:'Product, brand, partnerships',description:'Fashion/consumer brand venture associated with Damii.',needs:'Product development, brand strategy, revenue, marketing, partnerships, capital',notes:'Ownership and economic terms unconfirmed until agreements entered.'},
+    {id:'v3',name:'1DRM',category:'Creative Imprint',partners:'Daetrius, Alex',stage:'Active',revenueModel:'Music, licensing, IP',description:'Founder-owned creative ministry and cultural imprint.',needs:'',notes:'Projects: nNocent, A1R, 1RAISE, SESS1ONS'},
+    {id:'v4',name:'Airlink',category:'Technology',partners:'111 Partners',stage:'Development',revenueModel:'SaaS, partnerships',description:'Music-first smart-link, audience intelligence, and retargeting platform.',needs:'Product development, partnerships, customer acquisition, launch milestones',notes:''},
+    {id:'v5',name:'A1R',category:'Creative IP',partners:'1DRM',stage:'Development',revenueModel:'Music, licensing',description:'Visual-poetry album in development.',needs:'',notes:'Under 1DRM'},
+    {id:'v6',name:'1RAISE',category:'Social Impact',partners:'1DRM',stage:'Concept',revenueModel:'Fundraising, brand',description:'Cause-driven race and fundraising platform.',needs:'',notes:''},
+    {id:'v7',name:"SESS1ONS",category:'Live Experience',partners:'1DRM',stage:'Concept',revenueModel:'Ticketing, partnerships',description:'Live worship and praise experience.',needs:'',notes:''}
+  ],
+  albums: [
+    {id:'alb1',artistId:'ar1',producerId:'pr2',title:'A Dae Chasing iNNOCENCE',year:'TBD',status:'in development',notes:'Initial rollout target March (year unconfirmed). Do not fabricate release date.'},
+    {id:'alb2',artistId:null,producerId:'pr1',clientId:'cl2',title:'ELC',year:'2024',artist:'Nettspend',status:'completed',notes:'CXO produced 8 beats + mixing. Fee: $60,333.33  --  collection follow-up/unconfirmed payment.'},
+    {id:'alb3',artistId:null,producerId:'pr1',clientId:'cl2',title:'HIM',year:'2024',artist:'Nettspend',status:'completed',notes:'CXO mixing. Reported fee: 13.5  --  needs confirmation. Do not assume $13,500 without verification.'},
+    {id:'alb4',artistId:null,producerId:'pr1',clientId:'cl2',title:'Empty Clip',year:'2024',artist:'Che',status:'completed',notes:'Fee: $13,000. Service (beat vs mix) needs clarification.'}
+  ],
+  songs: [
+    {id:'sg1',producerId:'pr1',clientId:'cl2',title:'Sober',artist:'Nettspend',album:'Standalone',type:'mixing',beatFee:0,mixFee:'1.5',feeStatus:'needs-confirmation',paymentStatus:'follow-up',notes:'Reported fee 1.5  --  do not assume $1,500 without confirmation.'},
+    {id:'sg2',producerId:'pr1',clientId:'cl2',title:'Pull Up Please',artist:'Nettspend',album:'Standalone',type:'mixing',beatFee:0,mixFee:2000,feeStatus:'agreed',paymentStatus:'follow-up',notes:'Follow up through email trail.'},
+    {id:'sg3',producerId:'pr1',clientId:'cl2',title:'LL50',artist:'Nettspend',album:'Standalone',type:'beat',beatFee:4000,mixFee:0,feeStatus:'proposed',paymentStatus:'pending',notes:'Asking fee $4,000. Proposed/requested  --  do not count as confirmed revenue.'},
+    {id:'sg4',producerId:'pr1',clientId:'cl2',title:'Untitled Beat',artist:'Jaeychino',album:'Standalone',type:'beat',beatFee:4000,mixFee:0,feeStatus:'proposed',paymentStatus:'pending',notes:'Asking fee $4,000. Song title not provided. Proposed  --  not confirmed revenue.'}
+  ],
+  generaldeals: [
+    {id:'gd1',clientId:'cl2',title:'CXO Publishing Deal',type:'publishing',stage:'prospect',value:0,notes:'Potential publishing deal in pipeline. Publisher and terms TBD.',date:''}
+  ],
+  deals: [
+    {id:'dl1',clientId:'cl2',brand:'Nettspend / ELC',campaign:'ELC Album Production + Mixing',stage:'active',proposedFee:60333.33,agreedFee:'unconfirmed',invoicedFee:0,collectedFee:0,currency:'USD',status:'collection-followup',notes:'8 beats + mixing. Payment collection in progress via email trail.'},
+    {id:'dl2',clientId:'cl2',brand:'Nettspend / HIM',campaign:'HIM Album Mixing',stage:'active',proposedFee:'13.5-needs-clarification',agreedFee:'unconfirmed',invoicedFee:0,collectedFee:0,currency:'USD',status:'needs-clarification',notes:'Shorthand 13.5 not verified as $13,500. Deadline Friday Oct 16.'},
+    {id:'dl3',clientId:'cl2',brand:'Che / Empty Clip',campaign:'Empty Clip -- Service TBD',stage:'active',proposedFee:13000,agreedFee:'unconfirmed',invoicedFee:0,collectedFee:0,currency:'USD',status:'needs-clarification',notes:'Service type (beat vs mix) needs clarification.'},
+    {id:'dl4',clientId:'cl2',brand:'Publishing -- TBD',campaign:'CXO Publishing Deal',stage:'prospect',proposedFee:0,agreedFee:'unconfirmed',invoicedFee:0,collectedFee:0,currency:'USD',status:'prospect',dealType:'publishing',notes:'Potential publishing deal in pipeline. Terms and publisher TBD.'}
+  ],
+  tasks: [
+    {id:'t1',clientId:'cl2',title:'Review Nettspend email trails',description:'Review all email correspondence for payment obligations',assignee:'Daetrius',dueDate:'2026-10-16',priority:'high',status:'todo',notes:''},
+    {id:'t2',clientId:'cl2',title:'Verify ELC outstanding payment obligations',description:'Confirm what has been paid and what remains for ELC album',assignee:'Daetrius',dueDate:'2026-10-16',priority:'high',status:'todo',notes:''},
+    {id:'t3',clientId:'cl2',title:'Confirm HIM mixing fee and agreement',description:'Verify whether 13.5 = $13,500 and get supporting documentation',assignee:'Daetrius',dueDate:'2026-10-16',priority:'high',status:'todo',notes:'Deadline Friday Oct 16  --  pending confirmation'},
+    {id:'t4',clientId:'cl2',title:'Confirm Che Empty Clip service type',description:'Determine whether $13,000 is for beats or mixing on Empty Clip',assignee:'Daetrius',dueDate:'2026-10-20',priority:'medium',status:'todo',notes:''},
+    {id:'t5',clientId:'cl2',title:'Follow up on LL50 $4,000 beat fee',description:'Proposed beat fee  --  follow up with Nettspend camp',assignee:'Daetrius',dueDate:'2026-10-20',priority:'medium',status:'todo',notes:''},
+    {id:'t6',clientId:'cl2',title:'Follow up on Jaeychino $4,000 beat fee',description:'Proposed beat fee  --  no song title yet',assignee:'Daetrius',dueDate:'2026-10-20',priority:'medium',status:'todo',notes:''},
+    {id:'t7',clientId:'cl2',title:'Confirm Sober mixing fee',description:'Reported fee 1.5 needs confirmation before invoicing',assignee:'Daetrius',dueDate:'2026-10-20',priority:'medium',status:'todo',notes:''},
+    {id:'t8',clientId:'cl1',title:'Finalize iNNOCENCE rollout strategy',description:'Define launch window and editorial targets',assignee:'Daetrius',dueDate:'2026-11-01',priority:'high',status:'in-progress',notes:''},
+    {id:'t9',clientId:'v1',title:'Complete Streamer Open sponsor deck',description:'Build sponsor deck for outreach',assignee:'Daetrius',dueDate:'2026-10-25',priority:'high',status:'todo',notes:''},
+    {id:'t10',clientId:'v1',title:'Complete Streamer Open trailer',description:'Finish trailer for launch',assignee:'Daetrius',dueDate:'2026-10-25',priority:'high',status:'todo',notes:''}
+  ],
+  documents: [],
+  contacts: [],
+  financials: [
+    {id:'fi1',clientId:'cl2',dealId:'dl1',type:'beat-production',description:'ELC  --  8 beats production',amount:0,currency:'USD',status:'needs-verification',verificationStatus:'unconfirmed',reportedAmount:'60333.33',dueDate:'',notes:'Reported project amount. Check email trail.',category:'producer-fee',dealType:'commission',commissionRate:0,revenue111:0,clientNet:0,economicNote:'Commission rate TBD'},
+    {id:'fi2',clientId:'cl2',dealId:'dl1',type:'mixing',description:'ELC  --  album mixing',amount:0,currency:'USD',status:'needs-verification',verificationStatus:'unconfirmed',reportedAmount:'included in ELC',dueDate:'',notes:'Included in ELC reported total. Needs breakdown.',category:'producer-fee'},
+    {id:'fi3',clientId:'cl2',dealId:'dl2',type:'mixing',description:'HIM  --  album mixing',amount:0,currency:'USD',status:'needs-verification',verificationStatus:'unconfirmed',reportedAmount:'13.5',dueDate:'2026-10-16',notes:'Shorthand 13.5  --  not confirmed as $13,500. Check email.',category:'producer-fee'},
+    {id:'fi4',clientId:'cl2',dealId:'dl3',type:'service-tbd',description:'Empty Clip  --  service type unconfirmed',amount:0,currency:'USD',status:'needs-verification',verificationStatus:'unconfirmed',reportedAmount:'13000',dueDate:'',notes:'Service (beat vs mix) needs clarification before invoicing.',category:'producer-fee'},
+    {id:'fi5',clientId:'cl2',dealId:'',type:'mixing',description:'Sober  --  mixing',amount:0,currency:'USD',status:'needs-verification',verificationStatus:'unconfirmed',reportedAmount:'1.5',dueDate:'',notes:'Reported 1.5  --  not confirmed as $1,500.',category:'producer-fee'},
+    {id:'fi6',clientId:'cl2',dealId:'',type:'mixing',description:'Pull Up Please  --  mixing',amount:2000,currency:'USD',status:'agreed',verificationStatus:'agreed',reportedAmount:'2000',dueDate:'',notes:'Follow up through email trail.',category:'producer-fee'},
+    {id:'fi7',clientId:'cl2',dealId:'',type:'beat',description:'LL50  --  beat (proposed)',amount:4000,currency:'USD',status:'proposed',verificationStatus:'proposed',reportedAmount:'4000',dueDate:'',notes:'Proposed/requested. Not confirmed revenue.',category:'producer-fee'},
+    {id:'fi8',clientId:'cl2',dealId:'',type:'beat',description:'Jaeychino  --  untitled beat (proposed)',amount:4000,currency:'USD',status:'proposed',verificationStatus:'proposed',reportedAmount:'4000',dueDate:'',notes:'No song title. Proposed  --  not confirmed.',category:'producer-fee'}
+  ],
+  activity: [
+    {id:'ac1',timestamp:'2026-10-13',action:'CXO dashboard initialized with album and song data',entity:'producer',entityId:'pr1',user:'System'},
+    {id:'ac2',timestamp:'2026-10-13',action:'111 Partners OS launched',entity:'system',entityId:'',user:'System'}
+  ]
+};
+
+// ── UTILS ─────────────────────────────────────────────────────────────
+function uid(){return 'i'+Date.now()+Math.random().toString(36).slice(2,6);}
+function esc(s){var d=document.createElement('div');d.textContent=String(s||'');return d.innerHTML;}
+function V(id){return (document.getElementById(id)||{value:''}).value;}
+function fmt$(n){if(n==='unconfirmed'||String(n).includes('needs')||String(n).includes('clarif'))return '<span style="color:var(--yellow)">⚠ Needs clarification</span>';if(typeof n==='string'&&isNaN(parseFloat(n)))return n;return '$'+parseFloat(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmtDate(d){if(!d)return '--';return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+function daysLeft(d){if(!d)return null;return Math.ceil((new Date(d)-new Date())/86400000);}
+function clientById(id){return D.clients.find(function(c){return c.id===id;})||{};}
+function typeLabel(t){var m={artist:'Music Artist',producer:'Producer',creator:'Creator',filmtv:'Film & TV',other:'Other'};return m[t]||t;}
+function repBadge(r){
+  var labels={'exclusive':'Exclusive','non-exclusive':'Non-Exclusive','strategic-partner':'Strategic Partner','founder-owned':'Founder-Owned','advisor':'Advisor'};
+  var cls={'exclusive':'rep-excl','non-exclusive':'rep-nonexcl','strategic-partner':'rep-strategic','founder-owned':'rep-founder','advisor':'rep-advisor'};
+  return r?'<span class="badge '+(cls[r]||'badge-gray')+'">'+esc(labels[r]||r)+'</span>':'';
+}
+function stageColor(s){var m={prospect:'gray','in-discussion':'blue',negotiating:'yellow',contracting:'purple',active:'green',completed:'green','collection-followup':'yellow','needs-clarification':'yellow','follow-up':'yellow',proposed:'gray',agreed:'blue',lost:'red'};return m[s]||'gray';}
+function priorityBadge(p){var m={high:'badge-red',medium:'badge-yellow',low:'badge-gray'};return '<span class="badge '+(m[p]||'badge-gray')+'">'+esc(p)+'</span>';}
+function statusBadge(s){var c=stageColor(s);return '<span class="badge badge-'+c+'">'+esc(s)+'</span>';}
+
+// ── SAVE ─────────────────────────────────────────────────────────────
+var saveTimer=null;
+function setSv(s){
+  var dot=document.getElementById('sv-dot'),txt=document.getElementById('sv-txt');
+  if(!dot||!txt)return;
+  if(s==='saving'){dot.style.background='var(--blue)';txt.textContent='Saving...';}
+  else if(s==='error'){dot.style.background='var(--red)';txt.textContent='Error';}
+  else{dot.style.background='var(--green)';txt.textContent='Connected';}
+}
+function save(){
+  setSv('saving');
+  if(saveTimer)clearTimeout(saveTimer);
+  saveTimer=setTimeout(function(){
+    fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'batchUpdate',data:D})})
+      .then(function(){setSv('saved');}).catch(function(){setSv('error');});
+  },900);
+}
+function upd(x){Object.assign(D,x);save();R();}
+
+// ── MODAL ─────────────────────────────────────────────────────────────
+function modal(title,html,w){
+  var bg=document.createElement('div');bg.className='modal-bg';bg.id='mbg';
+  var m=document.createElement('div');m.className='modal';m.style.maxWidth=(w||540)+'px';
+  var hd=document.createElement('div');hd.className='modal-hd';
+  var t=document.createElement('div');t.className='modal-title';t.textContent=title;
+  var cl=document.createElement('button');cl.className='btn btn-ghost btn-sm';cl.textContent='✕';cl.addEventListener('click',CM);
+  hd.appendChild(t);hd.appendChild(cl);
+  var bd=document.createElement('div');bd.className='modal-body';bd.innerHTML=html;
+  m.appendChild(hd);m.appendChild(bd);
+  bg.appendChild(m);
+  bg.addEventListener('click',function(e){if(e.target===bg)CM();});
+  document.getElementById('modal-root').innerHTML='';
+  document.getElementById('modal-root').appendChild(bg);
+}
+function CM(){document.getElementById('modal-root').innerHTML='';}
+
+// ── NAV ─────────────────────────────────────────────────────────────
+var PG='dashboard';
+var NAV=[
+  {section:'OVERVIEW',items:[
+    {id:'dashboard',label:'Dashboard',icon:'⊙'},
+    {id:'tasks',label:'Tasks',icon:'✓'},
+    {id:'calendar',label:'Calendar',icon:'◻'}
+  ]},
+  {section:'TALENT',items:[
+    {id:'artists',label:'Music Artists',icon:'◎'},
+    {id:'producers',label:'Music Producers',icon:'◈'},
+    {id:'creators',label:'Creators',icon:'▶'},
+    {id:'filmtv',label:'Film & TV',icon:'◉'}
+  ]},
+  {section:'BUSINESS',items:[
+    {id:'deals',label:'Deals',icon:'◇'},
+    {id:'ventures',label:'Ventures & IP',icon:'△'},
+    {id:'1drm',label:'1DRM Imprint',icon:'◈'},
+    {id:'financials',label:'Financials',icon:'$'}
+  ]},
+  {section:'OPERATIONS',items:[
+    {id:'documents',label:'Documents',icon:'□'},
+    {id:'contacts',label:'Contacts',icon:'○'},
+    {id:'activity',label:'Activity Log',icon:'≡'},
+    {id:'settings',label:'Settings',icon:'⚙'}
+  ]}
+];
+var navState={detail:null,detailType:null,detailId:null};
+
+function rNav(){
+  var el=document.getElementById('sb-nav');
+  var h='';
+  NAV.forEach(function(s){
+    h+='<div class="sb-section"><span class="sb-section-label">'+s.section+'</span>';
+    s.items.forEach(function(item){
+      h+='<button class="sb-item'+(PG===item.id?' on':'')+'" data-page="'+item.id+'"><span class="sb-icon">'+item.icon+'</span><span class="sb-label">'+item.label+'</span></button>';
+    });
+    h+='</div>';
+  });
+  el.innerHTML=h;
+  el.querySelectorAll('[data-page]').forEach(function(btn){
+    btn.addEventListener('click',function(){go(btn.getAttribute('data-page'));});
+  });
+}
+
+function go(p,extra){
+  PG=p;
+  navState.detail=null;navState.detailType=null;navState.detailId=null;
+  if(extra){navState.detail=extra.detail;navState.detailType=extra.type;navState.detailId=extra.id;}
+  document.getElementById('tb-title').textContent=p.charAt(0).toUpperCase()+p.slice(1).replace(/([A-Z])/g,' $1');
+  rNav();R();
+  document.getElementById('content').scrollTop=0;
+}
+
+// ── SCREEN ROUTER ────────────────────────────────────────────────────
+function R(){
+  var pages={
+    dashboard:rDash,tasks:rTasks,calendar:rCalendar,'1drm':r1DRM,
+    artists:rArtists,producers:rProducers,creators:rCreators,filmtv:rFilmTV,
+    deals:rDeals,generaldeals:rDeals,ventures:rVentures,financials:rFinancials,
+    documents:rDocuments,contacts:rContacts,activity:rActivity,settings:rSettings
+  };
+  var fn=pages[PG]||rDash;
+  if(navState.detail){
+    if(navState.detailType==='producer')rProducerDetail(navState.detailId);
+    else if(navState.detailType==='artist')rArtistDetail(navState.detailId);
+    else if(navState.detailType==='creator')rCreatorDetail(navState.detailId);
+    else if(navState.detailType==='filmtv')rFilmTVDetail(navState.detailId);
+    else fn();
+  } else fn();
+}
+
+// ── DASHBOARD ────────────────────────────────────────────────────────
+function rDash(){
+  var active=D.clients.filter(function(c){return c.status==='active';}).length;
+  var openTasks=D.tasks.filter(function(t){return t.status!=='completed'&&t.status!=='cancelled';}).length;
+  var urgentTasks=D.tasks.filter(function(t){return t.priority==='high'&&t.status==='todo';});
+  var totalReported=D.deals.reduce(function(s,d){var v=parseFloat(d.proposedFee)||0;return s+v;},0);
+
+  var h='<div class="page-header"><div class="page-title">111 Partners OS</div><div class="page-sub">Talent. Ventures. Ownership. &nbsp;·&nbsp; '+new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})+'</div></div>';
+
+  // Stats
+  h+='<div class="stats-grid">';
+  h+=statCard('Active Clients',active,'Across all categories','stat-accent');
+  h+=statCard('Open Tasks',openTasks,'Requiring action','');
+  h+=statCard('Active Ventures',D.ventures.length,'In development','');
+  h+=statCard('Reported Fees','$'+totalReported.toLocaleString(),'Needs verification ⚠','');
+  h+='</div>';
+
+  h+='<div class="grid2">';
+
+  // Priority Actions
+  h+='<div class="card"><div class="sh"><h2>Priority Actions</h2><span class="badge badge-red">'+urgentTasks.length+' urgent</span></div>';
+  if(!urgentTasks.length){h+='<div class="empty"><div class="empty-text">No urgent tasks</div></div>';}
+  else{h+=urgentTasks.map(function(t){var dl=daysLeft(t.dueDate);return '<div class="task-row"><div class="task-check" data-tid="'+t.id+'"></div><div class="task-title">'+esc(t.title)+'<div style="font-size:11px;color:var(--mute);margin-top:2px">'+esc(clientById(t.clientId).name||t.clientId)+'</div></div>'+(t.dueDate?'<div class="task-due'+(dl!==null&&dl<=3?' urgent':'')+'">'+fmtDate(t.dueDate)+'</div>':'')+'</div>';}).join('');}
+  h+='</div>';
+
+  // Recent Activity
+  h+='<div class="card"><div class="sh"><h2>Recent Activity</h2></div>';
+  h+=D.activity.slice(-6).reverse().map(function(a){return '<div class="activity-item"><div class="activity-dot"></div><div class="activity-text">'+esc(a.action)+'</div><div class="activity-time">'+esc(a.timestamp)+'</div></div>';}).join('');
+  h+='</div></div>';
+
+  h+='<div class="grid2" style="margin-top:16px">';
+
+  // CXO Financial Summary
+  h+='<div class="card"><div class="sh"><h2>CXO  --  Financial Overview</h2><button class="btn btn-ghost btn-sm" onclick="go(\'producers\',{detail:true,type:\'producer\',id:\'pr1\'})">View →</button></div>';
+  h+='<div class="fin-row"><span class="fin-label">ELC Album (reported)</span><span class="fin-val">$60,333.33 <span class="fin-flag">⚠</span></span></div>';
+  h+='<div class="fin-row"><span class="fin-label">HIM Mixing (reported)</span><span class="fin-val">13.5  --  needs confirmation <span class="fin-flag">⚠</span></span></div>';
+  h+='<div class="fin-row"><span class="fin-label">Empty Clip (reported)</span><span class="fin-val">$13,000 <span class="fin-flag">⚠</span></span></div>';
+  h+='<div class="fin-row"><span class="fin-label">Pull Up Please</span><span class="fin-val">$2,000</span></div>';
+  h+='<div class="fin-row"><span class="fin-label">LL50 (proposed)</span><span class="fin-val">$4,000 proposed</span></div>';
+  h+='<div class="fin-row"><span class="fin-label">Jaeychino Beat (proposed)</span><span class="fin-val">$4,000 proposed</span></div>';
+  h+='<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:11px;color:var(--mute)">⚠ Reported amounts. Verification required before invoicing.</div></div>';
+
+  // Ventures
+  h+='<div class="card"><div class="sh"><h2>Active Ventures</h2><button class="btn btn-ghost btn-sm" onclick="go(\'ventures\')">View all →</button></div>';
+  h+=D.ventures.slice(0,4).map(function(v){return '<div class="fin-row"><span class="fin-label">'+esc(v.name)+'</span><span class="badge badge-'+( v.stage==='Active'?'green':'blue')+'">'+esc(v.stage)+'</span></div>';}).join('');
+  h+='</div></div>';
+
+  document.getElementById('screen').innerHTML=h;
+
+  // wire task checkboxes
+  document.getElementById('screen').querySelectorAll('[data-tid]').forEach(function(el){
+    el.addEventListener('click',function(){toggleTask(el.getAttribute('data-tid'));});
+  });
+}
+
+function statCard(label,val,sub,cls){
+  return '<div class="stat '+(cls||'')+'"><div class="stat-label">'+label+'</div><div class="stat-val">'+val+'</div><div class="stat-sub">'+sub+'</div></div>';
+}
+function toggleTask(id){
+  D.tasks=D.tasks.map(function(t){
+    if(t.id!==id)return t;
+    var next=t.status==='completed'?'todo':'completed';
+    return Object.assign({},t,{status:next});
+  });
+  save();R();
+}
+
+function mEditTask(id){
+  var t=D.tasks.find(function(x){return x.id===id;});
+  if(!t)return;
+  var statusOpts=['todo','in-progress','waiting','completed','cancelled'].map(function(s){
+    return '<option value="'+s+'"'+(t.status===s?' selected':'')+'>'+s+'</option>';
+  }).join('');
+  modal('Edit Task',
+    '<div class="form-group"><label class="form-label">Title</label><input class="form-input" id="et-title" value="'+esc(t.title)+'"/></div>'+
+    '<div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="et-desc" style="height:60px">'+esc(t.description||'')+'</textarea></div>'+
+    '<div class="form-row">'+
+    '<div class="form-group"><label class="form-label">Status</label><select class="form-input" id="et-status">'+statusOpts+'</select></div>'+
+    '<div class="form-group"><label class="form-label">Priority</label><select class="form-input" id="et-pri">'+
+    ['high','medium','low'].map(function(p){return '<option value="'+p+'"'+(t.priority===p?' selected':'')+'>'+p+'</option>';}).join('')+
+    '</select></div>'+
+    '</div>'+
+    '<div class="form-row">'+
+    '<div class="form-group"><label class="form-label">Assignee</label><input class="form-input" id="et-assign" value="'+esc(t.assignee||'')+'"/></div>'+
+    '<div class="form-group"><label class="form-label">Due Date</label><input type="date" class="form-input" id="et-due" value="'+esc(t.dueDate||'')+'"/></div>'+
+    '</div>'+
+    '<div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="et-notes" style="height:55px">'+esc(t.notes||'')+'</textarea></div>'+
+    '<div class="modal-footer"><button class="btn btn-danger" id="del-task-btn">Delete</button><button class="btn btn-secondary" onclick="CM()">Cancel</button><button class="btn btn-primary" id="save-task-edit-btn">Save</button></div>');
+  setTimeout(function(){
+    var sb=document.getElementById('save-task-edit-btn');
+    if(sb)sb.addEventListener('click',function(){
+      D.tasks=D.tasks.map(function(x){
+        if(x.id!==id)return x;
+        return Object.assign({},x,{title:V('et-title'),description:V('et-desc'),status:V('et-status'),priority:V('et-pri'),assignee:V('et-assign'),dueDate:V('et-due'),notes:V('et-notes')});
+      });
+      logActivity('Updated task: '+V('et-title'),'task',id);
+      upd({});CM();
+    });
+    var db=document.getElementById('del-task-btn');
+    if(db)db.addEventListener('click',function(){
+      if(confirm('Delete this task?')){
+        D.tasks=D.tasks.filter(function(x){return x.id!==id;});
+        logActivity('Deleted task','task',id);
+        upd({});CM();
+      }
+    });
+  },10);
+}
+
+// ── MUSIC ARTISTS ────────────────────────────────────────────────────
+function rArtists(){
+  var h='<div class="page-header"><div class="page-title">Music Artists</div><div class="page-sub">'+D.artists.length+' artist'+( D.artists.length!==1?'s':'')+' on roster</div></div>';
+  h+='<div style="margin-bottom:16px"><button class="btn btn-primary" onclick="mAddArtist()">+ Add Artist</button></div>';
+  h+='<div class="grid-auto">';
+  h+=D.artists.map(function(a){
+    var cl=clientById(a.clientId);
+    return '<div class="client-card" onclick="go(\'artists\',{detail:true,type:\'artist\',id:\''+a.id+'\'})">'+
+      '<div class="client-avatar" style="background:'+( cl.color||'#3b82f6')+'20;color:'+(cl.color||'#3b82f6')+'">'+esc(a.name[0])+'</div>'+
+      '<div class="client-name">'+esc(a.name)+'</div>'+
+      '<div class="client-role">'+esc(cl.relationship||'')+'</div>'+
+      '<div style="margin-bottom:8px;display:flex;gap:6px;flex-wrap:wrap"><span class="badge badge-green">Active</span>'+repBadge(cl.representation)+'</div>'+
+      '<div style="font-size:11px;color:var(--mute)">Next: '+esc(a.nextMilestone)+'</div>'+
+      '</div>';
+  }).join('');
+  h+='</div>';
+  document.getElementById('screen').innerHTML=h;
+}
+
+function rArtistDetail(id){
+  var a=D.artists.find(function(x){return x.id===id;});
+  if(!a){go('artists');return;}
+  var cl=clientById(a.clientId);
+  var albums=D.albums.filter(function(x){return x.artistId===id;});
+
+  var h='<div class="detail-header">';
+  h+='<div class="detail-back" onclick="go(\'artists\')">← Music Artists</div>';
+  h+='<div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">';
+  h+='<div class="client-avatar" style="width:52px;height:52px;border-radius:12px;font-size:20px;background:'+(cl.color||'#8b5cf6')+'20;color:'+(cl.color||'#8b5cf6')+'">'+esc(a.name[0])+'</div>';
+  h+='<div><div class="detail-name">'+esc(a.name)+'</div><div class="detail-meta">'+esc(typeLabel('artist'))+' &nbsp;·&nbsp; '+esc(cl.relationship||'')+'</div></div>';
+  h+='<div style="margin-left:auto;display:flex;gap:8px;align-items:center"><span class="badge badge-green">Active</span>'+repBadge(cl.representation)+'<button class="btn btn-secondary btn-sm" id="edit-status-btn">Edit Status</button><button class="btn btn-primary btn-sm" id="edit-profile-btn">Edit Profile</button></div>';
+  h+='</div>';
+  h+='<div class="tabs" id="artist-tabs">';
+  ['Overview','Music & Releases','Deals','Documents','Tasks','Notes'].forEach(function(tab,i){
+    h+='<button class="tab-btn'+(i===0?' on':'')+'" data-tab="at'+i+'">'+tab+'</button>';
+  });
+  h+='</div></div>';
+  h+='<div style="padding:22px 28px">';
+
+  // Overview tab
+  h+='<div class="tab-panel on" id="at0">';
+  h+='<div class="grid2"><div>';
+  h+='<div class="card" style="margin-bottom:14px"><div class="sh"><h2>Biography</h2></div><p style="font-size:13px;color:var(--ink2);line-height:1.7">'+esc(a.bio)+'</p></div>';
+  h+='<div class="card"><div class="sh"><h2>Strategy</h2></div><p style="font-size:13px;color:var(--ink2);line-height:1.7">'+esc(a.strategy)+'</p></div>';
+  h+='</div><div>';
+  h+='<div class="card" style="margin-bottom:14px"><div class="sh"><h2>Current Focus</h2></div><p style="font-size:13px;color:var(--ink2);line-height:1.7">'+esc(a.focus)+'</p></div>';
+  h+='<div class="card"><div class="sh"><h2>Next Milestone</h2></div><div style="font-size:14px;font-weight:600;color:var(--blue2)">'+esc(a.nextMilestone)+'</div></div>';
+  h+='</div></div></div>';
+
+  // Music & Releases tab
+  h+='<div class="tab-panel" id="at1">';
+  h+='<div class="sh"><h2>Albums & Projects</h2><button class="btn btn-primary btn-sm" onclick="mAddAlbum(\''+id+'\')">+ Add Album</button></div>';
+  if(!albums.length){h+='<div class="empty"><div class="empty-icon">♪</div><div class="empty-text">No albums yet</div></div>';}
+  else{h+='<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Title</th><th>Year</th><th>Status</th><th>Notes</th></tr></thead><tbody>';
+  h+=albums.map(function(alb){return '<tr><td><strong>'+esc(alb.title)+'</strong></td><td>'+esc(alb.year)+'</td><td>'+statusBadge(alb.status)+'</td><td style="color:var(--mute);font-size:12px">'+esc(alb.notes)+'</td></tr>';}).join('');
+  h+='</tbody></table></div>';}
+  h+='</div>';
+
+  // Tasks tab
+  h+='<div class="tab-panel" id="at4">';
+  var atasks=D.tasks.filter(function(t){return t.clientId===a.clientId;});
+  h+='<div class="sh"><h2>Tasks</h2><button class="btn btn-primary btn-sm" onclick="mAddTask(\''+a.clientId+'\')">+ Add Task</button></div>';
+  h+=renderTaskList(atasks);
+  h+='</div>';
+
+  ['at2','at3','at5'].forEach(function(tid){h+='<div class="tab-panel" id="'+tid+'"><div class="empty"><div class="empty-text">Coming soon</div></div></div>';});
+
+  h+='</div>';
+  document.getElementById('screen').innerHTML=h;
+  wireTabs('artist-tabs');
+  var esb=document.getElementById('edit-status-btn');if(esb)esb.addEventListener('click',function(){mEditClientStatus(cl.id);});
+  var epb=document.getElementById('edit-profile-btn');if(epb)epb.addEventListener('click',function(){mTalentProfile(cl.id);});
+  // Show profile data if any
+  if(cl.notes||( cl.fields&&cl.fields.length)||(cl.links&&cl.links.length)){
+    var notesPanel=document.getElementById('at5');
+    if(notesPanel){
+      var nd='<div class="card">';
+      if(cl.notes)nd+='<div class="sh"><h2>Notes</h2></div><p style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px">'+esc(cl.notes)+'</p>';
+      if(cl.fields&&cl.fields.length){nd+='<div class="sh"><h2>Info</h2></div>';cl.fields.forEach(function(f){nd+='<div class="fin-row"><span class="fin-label">'+esc(f.label)+'</span><span style="font-size:13px;color:var(--ink)">'+esc(f.value)+'</span></div>';});}
+      if(cl.links&&cl.links.length){nd+='<div class="sh" style="margin-top:14px"><h2>Links</h2></div>';cl.links.forEach(function(l){nd+='<div style="margin-bottom:6px"><a href="'+esc(l.url)+'" target="_blank" style="font-size:13px;color:var(--blue2);border-bottom:1px solid var(--blue-border)">'+esc(l.label)+'</a></div>';});}
+      nd+='</div>';
+      notesPanel.innerHTML=nd;
+    }
+  }
+}
+
+// ── MUSIC PRODUCERS ───────────────────────────────────────────────────
+function rProducers(){
+  var h='<div class="page-header"><div class="page-title">Music Producers</div><div class="page-sub">'+D.producers.length+' producers on roster</div></div>';
+  h+='<div style="margin-bottom:16px"><button class="btn btn-primary" onclick="mAddProducer()">+ Add Producer</button></div>';
+  h+='<div class="grid-auto">';
+  h+=D.producers.map(function(p){
+    var cl=clientById(p.clientId);
+    var songs=D.songs.filter(function(s){return s.producerId===p.id;}).length;
+    var albums=D.albums.filter(function(a){return a.producerId===p.id;}).length;
+    return '<div class="client-card" onclick="go(\'producers\',{detail:true,type:\'producer\',id:\''+p.id+'\'})">'+
+      '<div class="client-avatar" style="background:'+(cl.color||'#3b82f6')+'20;color:'+(cl.color||'#3b82f6')+'">'+esc(p.name[0])+'</div>'+
+      '<div class="client-name">'+esc(p.name)+'</div>'+
+      '<div class="client-role">'+esc(p.role)+'</div>'+
+      '<div class="fin-row" style="padding:6px 0;border:none"><span style="font-size:12px;color:var(--sub)">'+albums+' albums &nbsp;·&nbsp; '+songs+' songs</span></div>'+
+      '<div class="client-role" style="font-size:11px">'+esc(p.specialties)+'</div>'+
+      '</div>';
+  }).join('');
+  h+='</div>';
+  document.getElementById('screen').innerHTML=h;
+}
+
+function rProducerDetail(id){
+  var p=D.producers.find(function(x){return x.id===id;});
+  if(!p){go('producers');return;}
+  var cl=clientById(p.clientId);
+  var pAlbums=D.albums.filter(function(a){return a.producerId===id;});
+  var pSongs=D.songs.filter(function(s){return s.producerId===id;});
+  var pTasks=D.tasks.filter(function(t){return t.clientId===p.clientId;});
+
+  // Unique artists this producer worked with
+  var artistNames=[...new Set(pAlbums.map(function(a){return a.artist;}).concat(pSongs.map(function(s){return s.artist;})).filter(Boolean))];
+
+  var h='<div class="detail-header">';
+  h+='<div class="detail-back" onclick="go(\'producers\')">← Music Producers</div>';
+  h+='<div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">';
+  h+='<div class="client-avatar" style="width:52px;height:52px;border-radius:12px;font-size:20px;background:'+(cl.color||'#3b82f6')+'20;color:'+(cl.color||'#3b82f6')+'">'+esc(p.name[0])+'</div>';
+  h+='<div><div class="detail-name">'+esc(p.name)+'</div><div class="detail-meta">'+esc(p.role)+'</div></div>';
+  h+='<div style="margin-left:auto;display:flex;gap:8px;align-items:center"><span class="badge badge-green">Active</span>'+repBadge(cl.representation)+'<button class="btn btn-secondary btn-sm" id="prod-edit-status">Edit Status</button><button class="btn btn-primary btn-sm" id="prod-edit-profile">Edit Profile</button></div>';
+  h+='</div>';
+  h+='<div class="tabs" id="prod-tabs">';
+  ['Overview','Albums','Songs & Credits','Financials','Tasks','Documents','Notes'].forEach(function(tab,i){
+    h+='<button class="tab-btn'+(i===0?' on':'')+'" data-tab="pt'+i+'">'+tab+'</button>';
+  });
+  h+='</div></div>';
+  h+='<div style="padding:22px 28px">';
+
+  // OVERVIEW
+  h+='<div class="tab-panel on" id="pt0">';
+  h+='<div class="grid2">';
+  h+='<div>';
+  // Artist selector
+  h+='<div class="card" style="margin-bottom:14px"><div class="sh"><h2>Artists Worked With</h2></div>';
+  h+=artistNames.map(function(name){
+    var aAlbums=pAlbums.filter(function(a){return a.artist===name;});
+    var aSongs=pSongs.filter(function(s){return s.artist===name;});
+    return '<div style="padding:10px 0;border-bottom:1px solid var(--border)"><div style="font-weight:600;font-size:14px;margin-bottom:6px">'+esc(name)+'</div><div style="font-size:12px;color:var(--sub)">'+aAlbums.length+' album(s) &nbsp;·&nbsp; '+aSongs.length+' song(s)</div></div>';
+  }).join('');
+  if(!artistNames.length)h+='<div class="empty"><div class="empty-text">No artists yet</div></div>';
+  h+='</div>';
+
+  // Stats
+  h+='<div class="card"><div class="sh"><h2>Quick Stats</h2></div>';
+  h+='<div class="fin-row"><span class="fin-label">Total Albums</span><span class="fin-val">'+pAlbums.length+'</span></div>';
+  h+='<div class="fin-row"><span class="fin-label">Total Songs</span><span class="fin-val">'+pSongs.length+'</span></div>';
+  var confirmedFees=pSongs.filter(function(s){return s.feeStatus==='agreed'||s.feeStatus==='collected';}).reduce(function(sum,s){return sum+(parseFloat(s.mixFee)||0)+(parseFloat(s.beatFee)||0);},0);
+  var proposedFees=pSongs.filter(function(s){return s.feeStatus==='proposed';}).reduce(function(sum,s){return sum+(parseFloat(s.mixFee)||0)+(parseFloat(s.beatFee)||0);},0);
+  h+='<div class="fin-row"><span class="fin-label">Confirmed Fees</span><span class="fin-val">$'+confirmedFees.toLocaleString()+'</span></div>';
+  h+='<div class="fin-row"><span class="fin-label">Proposed Fees</span><span class="fin-val">$'+proposedFees.toLocaleString()+' <span class="fin-flag">⚠</span></span></div>';
+  h+='</div>';
+  h+='</div>';
+
+  // Priority Tasks
+  h+='<div>';
+  h+='<div class="card"><div class="sh"><h2>Priority Tasks</h2><button class="btn btn-primary btn-sm" onclick="mAddTask(\''+p.clientId+'\')">+ Task</button></div>';
+  var urgTasks=pTasks.filter(function(t){return t.priority==='high'&&t.status!=='completed';});
+  h+=renderTaskList(urgTasks.length?urgTasks:pTasks.slice(0,5));
+  h+='</div>';
+  h+='</div></div></div>';
+
+  // ALBUMS TAB
+  h+='<div class="tab-panel" id="pt1">';
+  h+='<div class="sh"><h2>Album Collaborations</h2><button class="btn btn-primary btn-sm" onclick="mAddAlbumProducer(\''+id+'\')">+ Add Album</button></div>';
+  h+='<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Album</th><th>Artist</th><th>Work Done</th><th>Fee</th><th>Status</th></tr></thead><tbody>';
+  if(!pAlbums.length){h+='<tr><td colspan="5"><div class="empty empty-text">No albums yet</div></td></tr>';}
+  else{h+=pAlbums.map(function(a){
+    var fee=a.notes&&a.notes.includes('$')?a.notes.match(/\$[\d,\.]+/)?a.notes.match(/\$[\d,\.]+/)[0]:'--':'--';
+    return '<tr><td><strong>'+esc(a.title)+'</strong></td><td>'+esc(a.artist||esc(a.artistId))+'</td><td style="font-size:12px;color:var(--sub)">'+esc(a.notes.split('.')[0])+'</td><td class="fin-val">'+fee+'</td><td>'+statusBadge(a.status)+'</td></tr>';
+  }).join('');}
+  h+='</tbody></table></div></div>';
+
+  // SONGS TAB
+  h+='<div class="tab-panel" id="pt2">';
+  h+='<div class="sh"><h2>Song Credits & Placements</h2><button class="btn btn-primary btn-sm" onclick="mAddSong(\''+id+'\')">+ Add Song</button></div>';
+  h+='<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Song</th><th>Artist</th><th>Type</th><th>Fee</th><th>Fee Status</th><th>Payment</th></tr></thead><tbody>';
+  if(!pSongs.length){h+='<tr><td colspan="6"><div class="empty empty-text">No songs yet</div></td></tr>';}
+  else{h+=pSongs.map(function(s){
+    var fee=s.type==='beat'?(parseFloat(s.beatFee)||s.beatFee):(parseFloat(s.mixFee)||s.mixFee);
+    var feeColor=s.feeStatus==='proposed'?'var(--yellow)':s.feeStatus==='needs-confirmation'?'var(--yellow)':'var(--ink)';
+    return '<tr><td><strong>'+esc(s.title)+'</strong><div style="font-size:11px;color:var(--mute)">'+esc(s.album)+'</div></td><td>'+esc(s.artist)+'</td><td>'+esc(s.type)+'</td>'+
+      '<td style="font-family:\'DM Mono\',monospace;font-weight:600;color:'+feeColor+'">$'+fee+'</td>'+
+      '<td>'+statusBadge(s.feeStatus)+'</td>'+
+      '<td>'+statusBadge(s.paymentStatus)+'</td></tr>';
+  }).join('');}
+  h+='</tbody></table></div></div>';
+
+  // FINANCIALS TAB
+  h+='<div class="tab-panel" id="pt3">';
+  h+='<div class="card"><div class="sh"><h2>Financial Summary  --  CXO</h2></div>';
+  h+='<div style="font-size:11px;color:var(--yellow);background:var(--yellow-bg);border:1px solid #fde68a;border-radius:6px;padding:10px 14px;margin-bottom:16px">⚠ All amounts are reported. Verification required before invoicing or treating as confirmed revenue.</div>';
+  h+='<div class="fin-row"><span class="fin-label">ELC  --  8 beats + mixing (reported)</span><span class="fin-val" style="color:var(--yellow)">$60,333.33 ⚠</span></div>';
+  h+='<div class="fin-row"><span class="fin-label">HIM  --  mixing (reported, unverified)</span><span class="fin-val" style="color:var(--yellow)">13.5 ⚠</span></div>';
+  h+='<div class="fin-row"><span class="fin-label">Empty Clip  --  service TBD (reported)</span><span class="fin-val" style="color:var(--yellow)">$13,000 ⚠</span></div>';
+  h+='<div class="fin-row"><span class="fin-label">Sober  --  mixing (reported, unverified)</span><span class="fin-val" style="color:var(--yellow)">1.5 ⚠</span></div>';
+  h+='<div class="fin-row"><span class="fin-label">Pull Up Please  --  mixing</span><span class="fin-val">$2,000</span></div>';
+  h+='<div class="fin-row" style="opacity:.6"><span class="fin-label">LL50  --  beat (proposed only)</span><span class="fin-val">$4,000 proposed</span></div>';
+  h+='<div class="fin-row" style="opacity:.6"><span class="fin-label">Jaeychino  --  beat (proposed only)</span><span class="fin-val">$4,000 proposed</span></div>';
+  h+='<div style="border-top:2px solid var(--border);margin-top:12px;padding-top:12px"><div class="fin-row"><span class="fin-label" style="font-weight:600">Confirmed Collected</span><span class="fin-val">$0.00</span></div><div class="fin-row"><span class="fin-label" style="font-weight:600">Confirmed Agreed</span><span class="fin-val">$2,000.00</span></div></div>';
+  h+='</div></div>';
+
+  // TASKS TAB
+  h+='<div class="tab-panel" id="pt4">';
+  h+='<div class="sh"><h2>Tasks</h2><button class="btn btn-primary btn-sm" onclick="mAddTask(\''+p.clientId+'\')">+ Add Task</button></div>';
+  h+=renderTaskList(pTasks);
+  h+='</div>';
+
+  ['pt5','pt6'].forEach(function(tid){h+='<div class="tab-panel" id="'+tid+'"><div class="empty"><div class="empty-text">Coming soon</div></div></div>';});
+
+  h+='</div>';
+  document.getElementById('screen').innerHTML=h;
+  wireTabs('prod-tabs');
+  // Wire edit status and profile
+  setTimeout(function(){
+    var esb2=document.querySelector('#prod-edit-status');
+    if(esb2)esb2.addEventListener('click',function(){mEditClientStatus(cl.id);});
+    var epb2=document.querySelector('#prod-edit-profile');
+    if(epb2)epb2.addEventListener('click',function(){mTalentProfile(cl.id);});
+    // Show profile notes tab
+    var pt6=document.getElementById('pt6');
+    if(pt6){
+      var nd='';
+      if(cl.notes||(cl.fields&&cl.fields.length)||(cl.links&&cl.links.length)){
+        nd='<div class="card">';
+        if(cl.notes)nd+='<div class="sh"><h2>Notes</h2></div><p style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px">'+esc(cl.notes)+'</p>';
+        if(cl.fields&&cl.fields.length){nd+='<div class="sh"><h2>Info</h2></div>';cl.fields.forEach(function(f){nd+='<div class="fin-row"><span class="fin-label">'+esc(f.label)+'</span><span style="font-size:13px;color:var(--ink)">'+esc(f.value)+'</span></div>';});}
+        if(cl.links&&cl.links.length){nd+='<div class="sh" style="margin-top:14px"><h2>Links</h2></div>';cl.links.forEach(function(l){nd+='<div style="margin-bottom:6px"><a href="'+esc(l.url)+'" target="_blank" style="font-size:13px;color:var(--blue2)">'+esc(l.label)+' ↗</a></div>';});}
+        nd+='</div>';
+      } else {
+        nd='<div class="empty"><div class="empty-text">No profile data yet</div><button class="btn btn-primary btn-sm" id="prof-add-btn" style="margin-top:12px">Edit Profile</button></div>';
+      }
+      pt6.innerHTML=nd;
+      var pab=document.getElementById('prof-add-btn');
+      if(pab)pab.addEventListener('click',function(){mTalentProfile(cl.id);});
+    }
+  },50);
+}
+
+// ── CREATORS ────────────────────────────────────────────────────────
+function rCreators(){
+  var h='<div class="page-header"><div class="page-title">Creators & Streamers</div></div>';
+  h+='<div style="margin-bottom:16px"><button class="btn btn-primary" onclick="mAddCreator()">+ Add Creator</button></div>';
+  h+='<div class="grid-auto">';
+  h+=D.creators.map(function(c){
+    var cl=clientById(c.clientId);
+    return '<div class="client-card" onclick="go(\'creators\',{detail:true,type:\'creator\',id:\''+c.id+'\'})">'+
+      '<div class="client-avatar" style="background:'+(cl.color||'#f59e0b')+'20;color:'+(cl.color||'#f59e0b')+'">'+esc(c.name[0])+'</div>'+
+      '<div class="client-name">'+esc(c.name)+'</div>'+
+      '<div class="client-role">'+esc(cl.relationship)+'</div>'+
+      '<div style="font-size:11px;color:var(--mute);margin-top:6px">'+esc(c.platforms)+'</div>'+
+      '</div>';
+  }).join('');
+  h+='</div>';
+  document.getElementById('screen').innerHTML=h;
+}
+
+function rCreatorDetail(id){
+  var c=D.creators.find(function(x){return x.id===id;});
+  if(!c){go('creators');return;}
+  var cl=clientById(c.clientId);
+  var h='<div class="detail-header"><div class="detail-back" onclick="go(\'creators\')">← Creators</div>';
+  h+='<div style="display:flex;align-items:center;gap:14px;margin-bottom:16px"><div class="client-avatar" style="width:52px;height:52px;border-radius:12px;font-size:20px;background:'+(cl.color||'#f59e0b')+'20;color:'+(cl.color||'#f59e0b')+'">'+esc(c.name[0])+'</div>';
+  h+='<div><div class="detail-name">'+esc(c.name)+'</div><div class="detail-meta">Creator &nbsp;·&nbsp; '+esc(cl.relationship)+'</div></div><div style="margin-left:auto;display:flex;gap:8px"><button class="btn btn-primary btn-sm" id="cr-edit-profile">Edit Profile</button></div></div>';
+  h+='<div class="tabs" id="cr-tabs">';
+  ['Overview','Brand Deals','Ventures','Profile & Notes'].forEach(function(tab,i){h+='<button class="tab-btn'+(i===0?' on':'')+'" data-tab="crt'+i+'">'+tab+'</button>';});
+  h+='</div></div>';
+  h+='<div style="padding:22px 28px">';
+  h+='<div class="tab-panel on" id="crt0"><div class="grid2">';
+  h+='<div class="card"><div class="sh"><h2>Focus</h2></div><p style="font-size:13px;color:var(--ink2);line-height:1.7">'+esc(c.focus)+'</p></div>';
+  h+='<div class="card"><div class="sh"><h2>Platforms</h2></div><p style="font-size:13px;color:var(--ink2)">'+esc(c.platforms)+'</p></div>';
+  h+='</div></div>';
+  // Link ventures for Damii
+  var linked=D.ventures.filter(function(v){return v.partners.toLowerCase().includes(c.name.toLowerCase());});
+  h+='<div class="tab-panel" id="crt2"><div class="sh"><h2>Linked Ventures</h2></div>';
+  if(!linked.length){h+='<div class="empty"><div class="empty-text">No ventures linked</div></div>';}
+  else{h+=linked.map(function(v){return '<div class="card-sm" style="margin-bottom:10px;cursor:pointer" onclick="go(\'ventures\')"><div style="font-weight:600;margin-bottom:4px">'+esc(v.name)+'</div><div style="font-size:12px;color:var(--sub)">'+esc(v.description)+'</div></div>';}).join('');}
+  h+='</div>';
+  ['crt1','crt3'].forEach(function(tid){h+='<div class="tab-panel" id="'+tid+'"><div class="empty"><div class="empty-text">Coming soon</div></div></div>';});
+  h+='</div>';
+  document.getElementById('screen').innerHTML=h;
+  wireTabs('cr-tabs');
+  setTimeout(function(){
+    var epbc=document.querySelector('#cr-edit-profile');
+    if(epbc)epbc.addEventListener('click',function(){mTalentProfile(cl.id);});
+    var crt3=document.getElementById('crt3');
+    if(crt3){
+      var nd='';
+      if(cl.notes||(cl.fields&&cl.fields.length)||(cl.links&&cl.links.length)){
+        nd='<div class="card">';
+        if(cl.notes)nd+='<div class="sh"><h2>Notes</h2></div><p style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px">'+esc(cl.notes)+'</p>';
+        if(cl.fields&&cl.fields.length){nd+='<div class="sh"><h2>Info</h2></div>';cl.fields.forEach(function(f){nd+='<div class="fin-row"><span class="fin-label">'+esc(f.label)+'</span><span style="font-size:13px">'+esc(f.value)+'</span></div>';});}
+        if(cl.links&&cl.links.length){nd+='<div class="sh" style="margin-top:14px"><h2>Links</h2></div>';cl.links.forEach(function(l){nd+='<div style="margin-bottom:6px"><a href="'+esc(l.url)+'" target="_blank" style="color:var(--blue2)">'+esc(l.label)+' ↗</a></div>';});}
+        nd+='</div>';
+      } else {
+        nd='<div class="empty"><div class="empty-text">No profile data yet</div><button class="btn btn-primary btn-sm" id="cr-prof-btn" style="margin-top:12px">Edit Profile</button></div>';
+      }
+      crt3.innerHTML=nd;
+      var cpb=document.getElementById('cr-prof-btn');
+      if(cpb)cpb.addEventListener('click',function(){mTalentProfile(cl.id);});
+    }
+  },50);
+}
+
+// ── FILM & TV ────────────────────────────────────────────────────────
+function rFilmTV(){
+  var h='<div class="page-header"><div class="page-title">Film & Television</div></div>';
+  h+='<div style="margin-bottom:16px"><button class="btn btn-primary" onclick="mAddFilmTV()">+ Add Client</button></div>';
+  h+='<div class="grid-auto">';
+  h+=D.filmtv.map(function(f){
+    var cl=clientById(f.clientId);
+    return '<div class="client-card" onclick="go(\'filmtv\',{detail:true,type:\'filmtv\',id:\''+f.id+'\'})">'+
+      '<div class="client-avatar" style="background:'+(cl.color||'#f97316')+'20;color:'+(cl.color||'#f97316')+'">'+esc(f.name[0])+'</div>'+
+      '<div class="client-name">'+esc(f.name)+'</div>'+
+      '<div class="client-role">'+esc(f.relationship)+'</div>'+
+      '<div style="font-size:11px;color:var(--mute);margin-top:6px">'+esc(f.focus.split(',')[0])+'</div>'+
+      '</div>';
+  }).join('');
+  h+='</div>';
+  document.getElementById('screen').innerHTML=h;
+}
+
+function rFilmTVDetail(id){
+  var f=D.filmtv.find(function(x){return x.id===id;});
+  if(!f){go('filmtv');return;}
+  var cl=clientById(f.clientId);
+  var h='<div class="detail-header"><div class="detail-back" onclick="go(\'filmtv\')">← Film & TV</div>';
+  h+='<div style="display:flex;align-items:center;gap:14px;margin-bottom:16px"><div class="client-avatar" style="width:52px;height:52px;border-radius:12px;font-size:20px;background:'+(cl.color||'#f97316')+'20;color:'+(cl.color||'#f97316')+'">'+esc(f.name[0])+'</div>';
+  h+='<div><div class="detail-name">'+esc(f.name)+'</div><div class="detail-meta">'+esc(f.relationship)+'</div></div><div style="margin-left:auto"><button class="btn btn-primary btn-sm" id="ft-edit-profile">Edit Profile</button></div>';
+  if(f.relationship.toLowerCase().includes('non-exclusive'))h+='<div style="margin-left:16px"><span class="badge badge-yellow">Non-exclusive partner</span></div>';
+  h+='</div>';
+  h+='<div class="tabs" id="ft-tabs">';
+  ['Overview','Projects','Brand Deals','Profile & Notes'].forEach(function(tab,i){h+='<button class="tab-btn'+(i===0?' on':'')+'" data-tab="ftt'+i+'">'+tab+'</button>';});
+  h+='</div></div>';
+  h+='<div style="padding:22px 28px">';
+  h+='<div class="tab-panel on" id="ftt0"><div class="grid2">';
+  h+='<div class="card"><div class="sh"><h2>Relationship</h2></div><p style="font-size:13px;color:var(--ink2);line-height:1.7">'+esc(f.relationship)+'</p>'+(f.notes?'<p style="font-size:12px;color:var(--yellow);margin-top:8px">'+esc(f.notes)+'</p>':'')+'</div>';
+  h+='<div class="card"><div class="sh"><h2>Focus Areas</h2></div><p style="font-size:13px;color:var(--ink2);line-height:1.7">'+esc(f.focus)+'</p></div>';
+  h+='</div></div>';
+  ['ftt1','ftt2','ftt3'].forEach(function(tid){h+='<div class="tab-panel" id="'+tid+'"><div class="empty"><div class="empty-text">Coming soon</div></div></div>';});
+  h+='</div>';
+  document.getElementById('screen').innerHTML=h;
+  wireTabs('ft-tabs');
+  setTimeout(function(){
+    var epbft=document.querySelector('#ft-edit-profile');
+    if(epbft)epbft.addEventListener('click',function(){mTalentProfile(cl.id);});
+    var ftt3=document.getElementById('ftt3');
+    if(ftt3){
+      var nd='';
+      if(cl.notes||(cl.fields&&cl.fields.length)||(cl.links&&cl.links.length)){
+        nd='<div class="card">';
+        if(cl.notes)nd+='<div class="sh"><h2>Notes</h2></div><p style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px">'+esc(cl.notes)+'</p>';
+        if(cl.fields&&cl.fields.length){nd+='<div class="sh"><h2>Info</h2></div>';cl.fields.forEach(function(f){nd+='<div class="fin-row"><span class="fin-label">'+esc(f.label)+'</span><span style="font-size:13px">'+esc(f.value)+'</span></div>';});}
+        if(cl.links&&cl.links.length){nd+='<div class="sh" style="margin-top:14px"><h2>Links</h2></div>';cl.links.forEach(function(l){nd+='<div style="margin-bottom:6px"><a href="'+esc(l.url)+'" target="_blank" style="color:var(--blue2)">'+esc(l.label)+' ↗</a></div>';});}
+        nd+='</div>';
+      } else {
+        nd='<div class="empty"><div class="empty-text">No profile data yet</div><button class="btn btn-primary btn-sm" id="ft-prof-btn" style="margin-top:12px">Edit Profile</button></div>';
+      }
+      ftt3.innerHTML=nd;
+      var fpb=document.getElementById('ft-prof-btn');
+      if(fpb)fpb.addEventListener('click',function(){mTalentProfile(cl.id);});
+    }
+  },50);
+}
+
+// ── VENTURES ─────────────────────────────────────────────────────────
+function rVentures(){
+  var h='<div class="page-header"><div class="page-title">Ventures & IP</div><div class="page-sub">'+D.ventures.length+' ventures</div></div>';
+  h+='<div style="margin-bottom:16px"><button class="btn btn-primary" id="add-venture-btn">+ Add Venture</button></div>';
+  h+='<div class="grid-auto">';
+  h+=D.ventures.map(function(v){
+    return '<div class="client-card" data-vid="'+v.id+'" style="cursor:pointer"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><span class="badge badge-blue">'+esc(v.category)+'</span><span class="badge badge-'+(v.stage==='Active'?'green':'blue')+'">'+esc(v.stage)+'</span></div>'+
+      '<div class="client-name">'+esc(v.name)+'</div>'+
+      '<div style="font-size:12px;color:var(--sub);margin-bottom:8px">'+esc(v.description.slice(0,80))+'...</div>'+
+      '<div style="font-size:11px;color:var(--mute)">Partners: '+esc(v.partners)+'</div>'+
+      '<div style="margin-top:10px"><button class="btn btn-ghost btn-sm" data-edit-vid="'+v.id+'" style="font-size:11px">Edit</button></div>'+
+      '</div>';
+  }).join('');
+  h+='</div>';
+  document.getElementById('screen').innerHTML=h;
+  var avb=document.getElementById('add-venture-btn');
+  if(avb)avb.addEventListener('click',mAddVenture);
+  document.getElementById('screen').querySelectorAll('[data-edit-vid]').forEach(function(btn){
+    btn.addEventListener('click',function(e){e.stopPropagation();mEditVenture(btn.getAttribute('data-edit-vid'));});
+  });
+}
+
+// ── DEALS ─────────────────────────────────────────────────────────────
+var DEAL_FILTER_CAT = 'all';
+var DEAL_STAGES = ['Prospect','Discussion','Negotiating','Contract Out','Signed','Active','Completed','Dead'];
+
+function allDeals(){
+  // Merge legacy D.deals + D.generaldeals into unified list
+  var legacy=(D.deals||[]).map(function(d){
+    return {id:d.id,clientId:d.clientId,title:d.brand||(d.campaign||'Untitled'),
+      type:d.dealType||'other',stage:d.stage||'Prospect',
+      value:d.proposedFee||0,date:d.date||'',notes:d.notes||'',_src:'deals'};
+  });
+  var general=(D.generaldeals||[]).map(function(d){
+    return {id:d.id,clientId:d.clientId,title:d.title||'Untitled',
+      type:d.type||'other',stage:d.stage||'Prospect',
+      value:d.value||0,date:d.date||'',notes:d.notes||'',_src:'generaldeals'};
+  });
+  return legacy.concat(general);
+}
+
+function rDeals(){
+  var all=allDeals();
+  var filtered=DEAL_FILTER_CAT==='all'?all:all.filter(function(d){
+    var dt=dealTypeById(d.type);
+    return dt.cat===DEAL_FILTER_CAT;
+  });
+
+  var total=filtered.reduce(function(s,d){return s+(parseFloat(d.value)||0);},0);
+
+  var h='<div class="page-header"><div class="page-title">Deals</div><div class="page-sub">'+all.length+' deals across all categories'+(total?' &nbsp;·&nbsp; $'+total.toLocaleString()+' total value':'')+'</div></div>';
+
+  // Category filter tabs
+  h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;align-items:center">';
+  DEAL_CATEGORIES.forEach(function(cat){
+    h+='<button class="btn btn-sm '+(DEAL_FILTER_CAT===cat.id?'btn-primary':'btn-secondary')+'" data-dcat="'+cat.id+'">'+cat.label+'</button>';
+  });
+  h+='<button class="btn btn-primary btn-sm" id="add-deal-btn" style="margin-left:auto">+ New Deal</button>';
+  h+='</div>';
+
+  // Pipeline board
+  h+='<div class="pipeline">';
+  DEAL_STAGES.forEach(function(stage){
+    var items=filtered.filter(function(d){return (d.stage||'').toLowerCase()===stage.toLowerCase();});
+    h+='<div class="pipeline-col"><div class="pipeline-header">'+esc(stage)+'<span class="pipeline-count">'+items.length+'</span></div>';
+    items.forEach(function(d){
+      var dt=dealTypeById(d.type);
+      var cl=clientById(d.clientId);
+      h+='<div class="pipeline-card" data-unified-deal="'+d.id+'" data-deal-src="'+d._src+'">'+
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">'+
+        '<span style="font-weight:600;font-size:13px">'+esc(d.title)+'</span>'+
+        '<span class="badge '+dt.color+'" style="font-size:9px">'+esc(dt.label)+'</span>'+
+        '</div>'+
+        '<div style="font-size:11px;color:var(--sub)">'+esc(cl.name||'--')+'</div>'+
+        (d.value?'<div style="font-size:11px;color:var(--mute);margin-top:4px">$'+parseFloat(d.value).toLocaleString()+'</div>':'')+'</div>';
+    });
+    h+='</div>';
+  });
+  h+='</div>';
+
+  document.getElementById('screen').innerHTML=h;
+
+  // Wire category filters
+  document.getElementById('screen').querySelectorAll('[data-dcat]').forEach(function(btn){
+    btn.addEventListener('click',function(){DEAL_FILTER_CAT=btn.getAttribute('data-dcat');rDeals();});
+  });
+  // Wire add button
+  var ab=document.getElementById('add-deal-btn');
+  if(ab)ab.addEventListener('click',function(){mAddDeal();});
+  // Wire pipeline cards
+  document.getElementById('screen').querySelectorAll('[data-unified-deal]').forEach(function(card){
+    card.addEventListener('click',function(){
+      mEditUnifiedDeal(card.getAttribute('data-unified-deal'),card.getAttribute('data-deal-src'));
+    });
+  });
+}
+
+// ── FINANCIALS ────────────────────────────────────────────────────────
+var FIN_FILTER = 'all';
+var FIN_TYPE_FILTER = 'all';
+
+// ── UNIFIED DEAL TAXONOMY ──────────────────────────────────────────────
+// Categories group deal types for filter tabs
+var DEAL_CATEGORIES = [
+  {id:'all',     label:'All Deals'},
+  {id:'music',   label:'Music'},
+  {id:'brand',   label:'Brand'},
+  {id:'film',    label:'Film & TV'},
+  {id:'creator', label:'Creator'},
+  {id:'business',label:'Business'}
+];
+
+var DEAL_TYPES = [
+  // MUSIC
+  {id:'publishing',        cat:'music',   label:'Publishing Deal',           color:'badge-yellow'},
+  {id:'co-publishing',     cat:'music',   label:'Co-Publishing',             color:'badge-yellow'},
+  {id:'label-deal',        cat:'music',   label:'Label Deal',                color:'badge-purple'},
+  {id:'distribution',      cat:'music',   label:'Music Distribution',        color:'badge-blue'},
+  {id:'production-agmt',   cat:'music',   label:'Production Agreement',      color:'badge-blue'},
+  {id:'sync-licensing',    cat:'music',   label:'Sync / Licensing',          color:'badge-green'},
+  {id:'master-licensing',  cat:'music',   label:'Master Licensing',          color:'badge-green'},
+  {id:'360-deal',          cat:'music',   label:'360 Deal',                  color:'badge-red'},
+  {id:'artist-mgmt',       cat:'music',   label:'Artist Management',         color:'badge-purple'},
+  // BRAND
+  {id:'brand-sponsorship', cat:'brand',   label:'Brand Sponsorship',         color:'badge-blue'},
+  {id:'brand-partnership', cat:'brand',   label:'Brand Partnership',         color:'badge-blue'},
+  {id:'ambassadorship',    cat:'brand',   label:'Ambassadorship',            color:'badge-green'},
+  {id:'content-deal',      cat:'brand',   label:'Content / Campaign Deal',   color:'badge-gray'},
+  {id:'product-collab',    cat:'brand',   label:'Product Collaboration',     color:'badge-yellow'},
+  // FILM & TV
+  {id:'film-sync',         cat:'film',    label:'Film Score / Sync',         color:'badge-purple'},
+  {id:'tv-licensing',      cat:'film',    label:'TV Licensing',              color:'badge-purple'},
+  {id:'feature-placement', cat:'film',    label:'Feature Film Placement',    color:'badge-blue'},
+  {id:'doc-collab',        cat:'film',    label:'Documentary Collaboration', color:'badge-gray'},
+  {id:'streaming-license', cat:'film',    label:'Streaming Platform License',color:'badge-green'},
+  {id:'ep-tv-deal',        cat:'film',    label:'EP / TV Development Deal',  color:'badge-red'},
+  // CREATOR
+  {id:'creator-mgmt',      cat:'creator', label:'Creator Management',        color:'badge-purple'},
+  {id:'creator-brand-deal',cat:'creator', label:'Creator Brand Deal',        color:'badge-blue'},
+  {id:'creator-collab',    cat:'creator', label:'Creator Collaboration',     color:'badge-gray'},
+  {id:'creator-revenue',   cat:'creator', label:'Revenue Share Agreement',   color:'badge-yellow'},
+  {id:'creator-content',   cat:'creator', label:'Content Licensing',         color:'badge-green'},
+  // BUSINESS
+  {id:'joint-venture',     cat:'business',label:'Joint Venture',             color:'badge-purple'},
+  {id:'equity-stake',      cat:'business',label:'Equity / Ownership Stake',  color:'badge-green'},
+  {id:'commission',        cat:'business',label:'Commission Agreement',      color:'badge-blue'},
+  {id:'partnership',       cat:'business',label:'Partnership / Co-ownership',color:'badge-purple'},
+  {id:'merchandise',       cat:'business',label:'Merchandise Deal',          color:'badge-yellow'},
+  {id:'consulting',        cat:'business',label:'Consulting / Advisory',     color:'badge-gray'},
+  {id:'no-fee-strategic',  cat:'business',label:'No Fee — Strategic',        color:'badge-gray'},
+  {id:'other',             cat:'business',label:'Other',                     color:'badge-gray'}
+];
+
+function dealTypeById(id){return DEAL_TYPES.find(function(t){return t.id===id;})||{id:id,label:id,color:'badge-gray',cat:'business'};}
+
+var DEAL_TYPE_LABELS = {};
+var DEAL_TYPE_COLORS = {};
+DEAL_TYPES.forEach(function(t){DEAL_TYPE_LABELS[t.id]=t.label;DEAL_TYPE_COLORS[t.id]=t.color;});
+
+function finStatusClass(s){
+  var m={'needs-verification':'fin-status-needs','proposed':'fin-status-proposed','agreed':'fin-status-agreed','invoiced':'fin-status-invoiced','collected':'fin-status-collected','overdue':'fin-status-overdue'};
+  return m[s]||'fin-status-proposed';
+}
+
+function calc111Revenue(f){
+  var amt=parseFloat(f.amount)||0;
+  var rate=parseFloat(f.commissionRate)||0;
+  if(f.dealType==='commission') return amt*(rate/100);
+  if(f.dealType==='direct') return amt;
+  if(f.dealType==='partnership') return parseFloat(f.revenue111)||0;
+  if(f.dealType==='no-fee-strategic') return 0;
+  if(f.dealType==='publishing') return parseFloat(f.revenue111)||0;
+  return parseFloat(f.revenue111)||0;
+}
+
+function calcClientNet(f){
+  var amt=parseFloat(f.amount)||0;
+  var r111=calc111Revenue(f);
+  if(f.dealType==='commission') return amt-r111;
+  if(f.dealType==='direct') return 0;
+  return amt-r111;
+}
+
+function calcFinSummary(records){
+  var out={collected111:0,invoiced111:0,agreed111:0,proposed111:0,needsVerification:0,underCollection:0,partnershipStakes:0,noFee:0};
+  records.forEach(function(f){
+    var r111=calc111Revenue(f);
+    var amt=parseFloat(f.amount)||0;
+    if(f.dealType==='no-fee-strategic'){out.noFee++;return;}
+    if(f.dealType==='partnership'){out.partnershipStakes+=r111;return;}
+    if(f.status==='collected'){out.collected111+=r111;}
+    else if(f.status==='invoiced'){out.invoiced111+=r111;}
+    else if(f.status==='agreed'){out.agreed111+=r111;}
+    else if(f.status==='proposed'){out.proposed111+=r111;}
+    else if(f.status==='needs-verification'){out.needsVerification+=parseFloat(f.reportedAmount)||0;out.underCollection+=amt;}
+  });
+  return out;
+}
+
+function rFinancials(){
+  var clients2=D.clients.filter(function(c){return D.financials.some(function(f){return f.clientId===c.id;});});
+  var filtered=D.financials.filter(function(f){
+    if(FIN_FILTER!=='all'&&f.clientId!==FIN_FILTER)return false;
+    if(FIN_TYPE_FILTER!=='all'&&f.dealType!==FIN_TYPE_FILTER)return false;
+    return true;
+  });
+  var summary=calcFinSummary(D.financials);
+
+  var h='<div class="page-header"><div class="page-title">Financials</div><div class="page-sub">Internal tracking only  --  not an accounting replacement</div></div>';
+  h+='<div style="font-size:12px;color:var(--yellow);background:var(--yellow-bg);border:1px solid #fde68a;border-radius:8px;padding:10px 16px;margin-bottom:16px">⚠ Reported and proposed amounts require verification before treating as confirmed revenue or receivables.</div>';
+
+  // Summary bar
+  // CXO-only financials filter by default
+  var cxoClient=D.clients.find(function(c){return c.name==='CXO';});
+  var cxoId=cxoClient?cxoClient.id:'cl2';
+  var cxoRecs=D.financials.filter(function(f){return f.clientId===cxoId;});
+  var cxoSummary=calcFinSummary(cxoRecs);
+
+  h+='<div class="fin-summary-bar">';
+  h+='<div class="fin-summary-cell stat-accent"><div class="fin-summary-label">Confirmed Revenue</div><div class="fin-summary-val">$'+cxoSummary.collected111.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+'</div><div class="fin-summary-sub">Collected by 111</div></div>';
+  h+='<div class="fin-summary-cell"><div class="fin-summary-label">Invoiced</div><div class="fin-summary-val">$'+cxoSummary.invoiced111.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+'</div><div class="fin-summary-sub">Awaiting payment</div></div>';
+  h+='<div class="fin-summary-cell"><div class="fin-summary-label">Agreed — Not Invoiced</div><div class="fin-summary-val">$'+cxoSummary.agreed111.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+'</div><div class="fin-summary-sub">Confirmed, not yet sent</div></div>';
+  h+='<div class="fin-summary-cell"><div class="fin-summary-label">Potential Revenue</div><div class="fin-summary-val" style="color:var(--yellow)">$'+cxoSummary.underCollection.toLocaleString()+'</div><div class="fin-summary-sub">Proposed / under collection</div></div>';
+  h+='<div class="fin-summary-cell"><div class="fin-summary-label">Pipeline Value</div><div class="fin-summary-val" style="color:var(--purple)">$'+cxoSummary.partnershipStakes.toLocaleString()+'</div><div class="fin-summary-sub">Partnership & venture stakes</div></div>';
+  h+='</div>';
+
+  // Filters
+  h+='<div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">';
+  h+='<button class="btn '+(FIN_FILTER==='all'?'btn-primary':'btn-secondary')+' btn-sm" data-fin-filter="all">All Clients</button>';
+  clients2.forEach(function(c){h+='<button class="btn '+(FIN_FILTER===c.id?'btn-primary':'btn-secondary')+' btn-sm" data-fin-filter="'+c.id+'">'+esc(c.name)+'</button>';});
+  h+='</div>';
+  h+='<div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;align-items:center">';
+  h+='<button class="btn '+(FIN_TYPE_FILTER==='all'?'btn-primary':'btn-secondary')+' btn-sm" data-fin-type="all">All Types</button>';
+  DEAL_TYPES.forEach(function(t){h+='<button class="btn '+(FIN_TYPE_FILTER===t?'btn-primary':'btn-secondary')+' btn-sm" data-fin-type="'+t+'">'+esc(DEAL_TYPE_LABELS[t])+'</button>';});
+  h+='<button class="btn btn-primary btn-sm" style="margin-left:auto" id="add-fin-btn">+ Add Record</button>';
+  h+='</div>';
+
+  // Table
+  h+='<div class="tbl-wrap fin-tbl"><table class="tbl" style="font-size:12px"><thead><tr>';
+  h+='<th>Client</th><th>Description</th><th>Type</th><th>Gross Amount</th><th>Commission %</th><th>111 Revenue</th><th>Client Net</th><th>Status</th><th>Notes</th><th></th>';
+  h+='</tr></thead><tbody>';
+
+  if(!filtered.length){
+    h+='<tr><td colspan="10"><div class="empty empty-text">No records match filters</div></td></tr>';
+  } else {
+    filtered.forEach(function(f){
+      var cl=clientById(f.clientId);
+      var sc=finStatusClass(f.status);
+      var r111=calc111Revenue(f);
+      var cnet=calcClientNet(f);
+      var isNoFee=f.dealType==='no-fee-strategic';
+      var isPartnership=f.dealType==='partnership';
+      h+='<tr>';
+      h+='<td style="font-weight:600">'+esc(cl.name||'--')+'</td>';
+      h+='<td>'+esc(f.description)+'<div style="font-size:10px;color:var(--mute)">'+esc(f.reportedAmount?'Reported: $'+f.reportedAmount:'')+'</div></td>';
+      h+='<td><span class="badge '+(DEAL_TYPE_COLORS[f.dealType]||'badge-gray')+'">'+esc(DEAL_TYPE_LABELS[f.dealType]||f.dealType)+'</span></td>';
+      h+='<td><input class="fin-input '+sc+'" data-fid="'+f.id+'" data-field="amount" value="'+esc(f.amount||'')+'" placeholder="0.00" type="number" step="0.01" style="width:110px"'+(isNoFee?' disabled':'')+'/></td>';
+      h+='<td>'+(isNoFee||isPartnership?'<span style="color:var(--mute);font-size:11px">'+(isNoFee?'N/A':'Manual')+'</span>':'<input class="fin-input" data-fid="'+f.id+'" data-field="commissionRate" value="'+esc(f.commissionRate||'')+'" placeholder="%" type="number" step="0.1" style="width:70px"/> <span style="font-size:11px;color:var(--mute)">%</span>')+'</td>';
+      h+='<td style="font-family:DM Mono,monospace;font-weight:700;color:var(--blue2)">'+(isNoFee?' -- ':isPartnership?'<input class="fin-input" data-fid="'+f.id+'" data-field="revenue111" value="'+esc(f.revenue111||'')+'" placeholder="0.00" type="number" style="width:110px"/>':'$'+r111.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}))+'</td>';
+      h+='<td style="font-family:DM Mono,monospace;color:var(--sub)">'+(isNoFee||isPartnership?' -- ':'$'+cnet.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}))+'</td>';
+      h+='<td><select class="form-input fin-input '+sc+'" data-fid="'+f.id+'" data-field="status" style="width:140px;font-size:11px">'+
+        ['needs-verification','proposed','agreed','invoiced','collected','overdue','disputed','cancelled','no-fee'].map(function(s){return '<option value="'+s+'"'+(f.status===s?' selected':'')+'>'+s+'</option>';}).join('')+
+        '</select></td>';
+      h+='<td style="max-width:160px"><input class="fin-input" data-fid="'+f.id+'" data-field="notes" value="'+esc(f.notes||'')+'" placeholder="Notes..." style="width:100%"/></td>';
+      h+='<td><button class="btn btn-ghost btn-xs fin-edit-btn" data-edit-fid="'+f.id+'">✎</button> <button class="btn btn-danger btn-xs fin-edit-btn" data-del-fid="'+f.id+'">✕</button></td>';
+      h+='</tr>';
+    });
+  }
+  h+='</tbody></table></div>';
+
+  document.getElementById('screen').innerHTML=h;
+
+  // Wire client filters
+  document.getElementById('screen').querySelectorAll('[data-fin-filter]').forEach(function(btn){
+    btn.addEventListener('click',function(){FIN_FILTER=btn.getAttribute('data-fin-filter');rFinancials();});
+  });
+  // Wire type filters
+  document.getElementById('screen').querySelectorAll('[data-fin-type]').forEach(function(btn){
+    btn.addEventListener('click',function(){FIN_TYPE_FILTER=btn.getAttribute('data-fin-type');rFinancials();});
+  });
+  // Add button
+  var addBtn=document.getElementById('add-fin-btn');
+  if(addBtn)addBtn.addEventListener('click',function(){mAddFinancial();});
+  // Inline field saves
+  document.getElementById('screen').querySelectorAll('[data-fid][data-field]').forEach(function(input){
+    var handler=function(){
+      var fid=input.getAttribute('data-fid');
+      var field=input.getAttribute('data-field');
+      var val=(['amount','commissionRate','revenue111','clientNet'].indexOf(field)!==-1)?parseFloat(input.value)||0:input.value;
+      D.financials=D.financials.map(function(f){
+        if(f.id!==fid)return f;
+        var upd=Object.assign({},f);
+        upd[field]=val;
+        return upd;
+      });
+      if(field==='status'||field==='commissionRate'||field==='amount'||field==='revenue111'){
+        // Recalc display without full re-render
+        save();
+      } else save();
+    };
+    input.addEventListener('change',handler);
+    if(input.tagName==='INPUT'&&input.type==='text')input.addEventListener('blur',handler);
+  });
+  // Edit buttons
+  document.getElementById('screen').querySelectorAll('[data-edit-fid]').forEach(function(btn){
+    btn.addEventListener('click',function(){mEditFinancial(btn.getAttribute('data-edit-fid'));});
+  });
+  // Delete buttons
+  document.getElementById('screen').querySelectorAll('[data-del-fid]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      if(confirm('Delete this financial record?')){
+        var fid=btn.getAttribute('data-del-fid');
+        D.financials=D.financials.filter(function(f){return f.id!==fid;});
+        logActivity('Deleted financial record','financial',fid);
+        upd({});
+      }
+    });
+  });
+}
+
+function mAddFinancial(clientId){
+  var statusOpts=['needs-verification','proposed','agreed','invoiced','collected','no-fee'].map(function(s){return '<option value="'+s+'">'+s+'</option>';}).join('');
+  var typeOpts=DEAL_TYPES.map(function(t){return '<option value="'+t+'">'+DEAL_TYPE_LABELS[t]+'</option>';}).join('');
+  modal('Add Financial Record',
+    '<div class="form-row">'+
+    '<div class="form-group"><label class="form-label">Client</label><select class="form-input" id="fi-cl">'+
+    D.clients.map(function(c){return '<option value="'+c.id+'"'+(c.id===clientId?' selected':'')+'>'+esc(c.name)+'</option>';}).join('')+
+    '</select></div>'+
+    '<div class="form-group"><label class="form-label">Deal Type</label><select class="form-input" id="fi-dtype">'+typeOpts+'</select></div>'+
+    '</div>'+
+    '<div class="form-group"><label class="form-label">Description</label><input class="form-input" id="fi-desc" placeholder="e.g. ELC  --  album mixing, CXO publishing deal"/></div>'+
+    '<div class="form-row">'+
+    '<div class="form-group"><label class="form-label">Reported / Proposed Amount</label><input class="form-input" id="fi-rep" placeholder="e.g. 13.5 or unclear  --  flag if unverified"/></div>'+
+    '<div class="form-group"><label class="form-label">Confirmed Gross Amount ($)</label><input type="number" class="form-input" id="fi-amt" placeholder="0.00" step="0.01"/></div>'+
+    '</div>'+
+    '<div class="form-row">'+
+    '<div class="form-group"><label class="form-label">111 Commission Rate (%)</label><input type="number" class="form-input" id="fi-rate" placeholder="e.g. 15  --  leave blank if TBD" step="0.1"/></div>'+
+    '<div class="form-group"><label class="form-label">111 Revenue (if manual)</label><input type="number" class="form-input" id="fi-rev" placeholder="Override auto-calc" step="0.01"/></div>'+
+    '</div>'+
+    '<div class="form-row">'+
+    '<div class="form-group"><label class="form-label">Status</label><select class="form-input" id="fi-stat">'+statusOpts+'</select></div>'+
+    '<div class="form-group"><label class="form-label">Due Date</label><input type="date" class="form-input" id="fi-due"/></div>'+
+    '</div>'+
+    '<div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="fi-notes" style="height:60px" placeholder="Context, email refs, terms TBD, strategic-only relationship..."></textarea></div>'+
+    '<div class="modal-footer"><button class="btn btn-secondary" onclick="CM()">Cancel</button><button class="btn btn-primary" id="save-fin-btn">Add Record</button></div>');
+  setTimeout(function(){
+    var btn=document.getElementById('save-fin-btn');
+    if(btn)btn.addEventListener('click',function(){
+      var dtype=V('fi-dtype');
+      var rec={id:uid(),clientId:V('fi-cl'),dealId:'',type:V('fi-dtype'),description:V('fi-desc'),amount:parseFloat(V('fi-amt'))||0,currency:'USD',status:V('fi-stat'),verificationStatus:V('fi-stat'),reportedAmount:V('fi-rep'),dueDate:V('fi-due'),notes:V('fi-notes'),category:dtype,dealType:dtype,commissionRate:parseFloat(V('fi-rate'))||0,revenue111:parseFloat(V('fi-rev'))||0,clientNet:0,economicNote:''};
+      D.financials.push(rec);
+      logActivity('Added financial record: '+rec.description,'financial',rec.id);
+      upd({});CM();
+    });
+  },10);
+}
+
+function mEditFinancial(id){
+  var f=D.financials.find(function(x){return x.id===id;});
+  if(!f)return;
+  modal('Edit: '+f.description,
+    '<div class="form-group"><label class="form-label">Description</label><input class="form-input" id="efi-desc" value="'+esc(f.description)+'"/></div>'+
+    '<div class="form-row">'+
+    '<div class="form-group"><label class="form-label">Reported Amount</label><input class="form-input" id="efi-rep" value="'+esc(f.reportedAmount||'')+'"/></div>'+
+    '<div class="form-group"><label class="form-label">Confirmed Amount ($)</label><input type="number" class="form-input" id="efi-amt" value="'+esc(f.amount||0)+'" step="0.01"/></div>'+
+    '</div>'+
+    '<div class="form-row">'+
+    '<div class="form-group"><label class="form-label">Status</label><select class="form-input" id="efi-stat">'+
+    ['needs-verification','proposed','agreed','invoiced','collected','overdue','disputed','cancelled'].map(function(s){return '<option value="'+s+'"'+(f.status===s?' selected':'')+'>'+s+'</option>';}).join('')+
+    '</select></div>'+
+    '<div class="form-group"><label class="form-label">Due Date</label><input type="date" class="form-input" id="efi-due" value="'+esc(f.dueDate||'')+'"/></div>'+
+    '</div>'+
+    '<div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="efi-notes" style="height:60px">'+esc(f.notes||'')+'</textarea></div>'+
+    '<div class="modal-footer"><button class="btn btn-danger" id="del-fin-btn">Delete</button><button class="btn btn-secondary" onclick="CM()">Cancel</button><button class="btn btn-primary" id="save-efi-btn">Save</button></div>');
+  setTimeout(function(){
+    var saveBtn=document.getElementById('save-efi-btn');
+    if(saveBtn)saveBtn.addEventListener('click',function(){
+      D.financials=D.financials.map(function(x){
+        if(x.id!==id)return x;
+        return Object.assign({},x,{description:V('efi-desc'),reportedAmount:V('efi-rep'),amount:parseFloat(V('efi-amt'))||0,status:V('efi-stat'),dueDate:V('efi-due'),notes:V('efi-notes')});
+      });
+      logActivity('Updated financial record: '+V('efi-desc'),'financial',id);
+      upd({});CM();
+    });
+    var delBtn=document.getElementById('del-fin-btn');
+    if(delBtn)delBtn.addEventListener('click',function(){
+      if(confirm('Delete this record?')){D.financials=D.financials.filter(function(x){return x.id!==id;});logActivity('Deleted financial record','financial',id);upd({});CM();}
+    });
+  },10);
+}
+
+// ── TASKS ─────────────────────────────────────────────────────────────
+function rTasks(){
+  var h='<div class="page-header"><div class="page-title">All Tasks</div></div>';
+  h+='<div style="margin-bottom:16px;display:flex;gap:8px"><button class="btn btn-primary" onclick="mAddTask()">+ Add Task</button></div>';
+  h+='<div class="grid2">';
+  var urgent=D.tasks.filter(function(t){return t.priority==='high'&&t.status!=='completed';});
+  var other=D.tasks.filter(function(t){return t.priority!=='high'&&t.status!=='completed';});
+  h+='<div class="card"><div class="sh"><h2>High Priority</h2><span class="badge badge-red">'+urgent.length+'</span></div>'+renderTaskList(urgent)+'</div>';
+  h+='<div class="card"><div class="sh"><h2>Other Tasks</h2></div>'+renderTaskList(other)+'</div>';
+  h+='</div>';
+  document.getElementById('screen').innerHTML=h;
+  wireTaskList(document.getElementById('screen'));
+}
+
+function renderTaskList(tasks){
+  if(!tasks||!tasks.length)return '<div class="empty"><div class="empty-text">No tasks</div></div>';
+  return tasks.map(function(t){
+    var done=t.status==='completed';
+    var dl=daysLeft(t.dueDate);
+    var cl=clientById(t.clientId);
+    return '<div class="task-row">'+
+      '<div class="task-check'+(done?' done':'')+'" data-tid="'+t.id+'">'+(done?'✓':'')+'</div>'+
+      '<div class="task-title'+(done?' done':'')+'">'+esc(t.title)+
+        '<div style="font-size:11px;color:var(--mute);margin-top:2px">'+
+          (cl.name?esc(cl.name)+' &nbsp;·&nbsp; ':'')+
+          (done?'<span style="color:var(--green)">Completed</span>':esc(t.status||'todo'))+
+        '</div>'+
+      '</div>'+
+      '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0">'+
+      (t.dueDate&&!done?'<div class="task-due'+(dl!==null&&dl<=3?' urgent':'')+'">'+fmtDate(t.dueDate)+'</div>':'')+
+      priorityBadge(t.priority)+
+      '<button class="btn btn-ghost btn-xs" data-edit-tid="'+t.id+'" style="opacity:.5;font-size:11px">✎</button>'+
+      (done?'<button class="btn btn-ghost btn-xs" data-undo-tid="'+t.id+'" style="opacity:.5;font-size:10px;color:var(--yellow)" title="Mark incomplete">↩</button>':'')+
+      '</div>'+
+      '</div>';
+  }).join('');
+}
+
+function wireTaskList(container){
+  if(!container)return;
+  container.querySelectorAll('[data-tid]').forEach(function(el){
+    el.addEventListener('click',function(){toggleTask(el.getAttribute('data-tid'));});
+  });
+  container.querySelectorAll('[data-edit-tid]').forEach(function(el){
+    el.addEventListener('click',function(e){e.stopPropagation();mEditTask(el.getAttribute('data-edit-tid'));});
+  });
+  container.querySelectorAll('[data-undo-tid]').forEach(function(el){
+    el.addEventListener('click',function(e){e.stopPropagation();toggleTask(el.getAttribute('data-undo-tid'));});
+  });
+}
+
+// ── SIMPLE PAGES ─────────────────────────────────────────────────────
+function rCalendar(){
+  var now=new Date();
+  var y=CAL_STATE.y||now.getFullYear();
+  var m=CAL_STATE.m!==undefined?CAL_STATE.m:now.getMonth();
+  var fd=new Date(y,m,1).getDay();
+  var dim=new Date(y,m+1,0).getDate();
+  var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var days2=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  // Gather events from tasks + upcoming deadlines
+  var events={};
+  D.tasks.filter(function(t){return t.dueDate&&t.status!=='completed';}).forEach(function(t){
+    var k=t.dueDate.slice(0,10);
+    if(!events[k])events[k]=[];
+    events[k].push({label:t.title,type:'task'});
+  });
+
+  var h='<div class="page-header"><div class="page-title">Calendar</div><div class="page-sub">'+months[m]+' '+y+'</div></div>';
+
+  h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">';
+  h+='<div style="display:flex;gap:8px"><button class="btn btn-secondary btn-sm" onclick="CAL_STATE.m--;if(CAL_STATE.m<0){CAL_STATE.m=11;CAL_STATE.y--;}rCalendar()">← Prev</button><button class="btn btn-secondary btn-sm" onclick="CAL_STATE.m++;if(CAL_STATE.m>11){CAL_STATE.m=0;CAL_STATE.y++;}rCalendar()">Next →</button><button class="btn btn-ghost btn-sm" onclick="CAL_STATE.y=new Date().getFullYear();CAL_STATE.m=new Date().getMonth();rCalendar()">Today</button></div>';
+  h+='<a href="https://calendar.google.com/calendar/r?cid='+encodeURIComponent(CAL_ID)+'" target="_blank" class="btn btn-secondary btn-sm">Open Google Calendar ↗</a>';
+  h+='</div>';
+
+  h+='<div class="card"><div class="cal-grid" style="margin-bottom:6px">';
+  days2.forEach(function(d){h+='<div class="cal-day-hd">'+d+'</div>';});
+  h+='</div><div class="cal-grid">';
+
+  for(var i=0;i<fd;i++)h+='<div></div>';
+  for(var d=1;d<=dim;d++){
+    var ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    var ev=events[ds]||[];
+    var isToday=now.getFullYear()===y&&now.getMonth()===m&&now.getDate()===d;
+    h+='<div class="cal-cell'+(isToday?' today':'')+'" data-ds="'+ds+'">';
+    h+='<div class="cal-num">'+d+'</div>';
+    ev.slice(0,2).forEach(function(e){h+='<div class="cal-event '+e.type+'">'+esc(e.label.slice(0,18))+'</div>';});
+    if(ev.length>2)h+='<div style="font-size:9px;color:var(--mute)">+'+( ev.length-2)+' more</div>';
+    h+='</div>';
+  }
+  h+='</div></div>';
+
+  // Upcoming tasks list
+  h+='<div class="card" style="margin-top:16px"><div class="sh"><h2>Upcoming Deadlines</h2><button class="btn btn-primary btn-sm" onclick="pushAllToCalendar()">Sync to Google Calendar</button></div>';
+  var upcoming=D.tasks.filter(function(t){return t.dueDate&&t.status!=='completed'&&new Date(t.dueDate)>=new Date();}).sort(function(a,b){return a.dueDate.localeCompare(b.dueDate);}).slice(0,10);
+  h+=renderTaskList(upcoming);
+  h+='</div>';
+
+  document.getElementById('screen').innerHTML=h;
+  wireTaskList(document.getElementById('screen'));
+  document.getElementById('screen').querySelectorAll('[data-ds]').forEach(function(el){el.addEventListener('click',function(){showCalDay(el.getAttribute('data-ds'));});});
+}
+
+var CAL_STATE={y:new Date().getFullYear(),m:new Date().getMonth()};
+
+function showCalDay(ds){
+  var ev=D.tasks.filter(function(t){return t.dueDate===ds;});
+  modal(new Date(ds).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}),
+    (ev.length?ev.map(function(t){return '<div class="card-sm" style="margin-bottom:8px"><div style="font-weight:600;margin-bottom:4px">'+esc(t.title)+'</div><div style="font-size:12px;color:var(--sub)">'+esc(clientById(t.clientId).name||'')+'</div>'+priorityBadge(t.priority)+'</div>';}).join(''):
+    '<div class="empty"><div class="empty-text">No events</div><button class="btn btn-primary btn-sm" style="margin-top:12px" onclick="CM();mAddTask()">+ Add Task</button></div>'));
+}
+
+function pushAllToCalendar(){
+  var tasks=D.tasks.filter(function(t){return t.dueDate&&t.status!=='completed';});
+  fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'syncCalendar',tasks:tasks,calId:CAL_ID})}).catch(function(){});
+  alert('Syncing '+tasks.length+' tasks to Google Calendar. Events will appear shortly.');
+}
+
+var DOC_FILTER = 'all';
+function rDocuments(){
+  var h='<div class="page-header"><div class="page-title">Documents</div><div class="page-sub">Organized by client &nbsp;·&nbsp; All links open in Google Drive</div></div>';
+  h+='<div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">';
+  h+='<button class="btn '+(DOC_FILTER==="all"?"btn-primary":"btn-secondary")+' btn-sm" data-filter="all">All</button>';
+  D.clients.filter(function(c){return D.documents.some(function(d){return d.clientId===c.id;});}).forEach(function(c){
+    h+='<button class="btn '+(DOC_FILTER===c.id?"btn-primary":"btn-secondary")+' btn-sm" data-filter-client="'+c.id+'">'+esc(c.name)+'</button>';
+  });
+  h+='<button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="mAddDocument()">+ Add Document</button>';
+  h+='</div>';
+
+  var filtered=DOC_FILTER==='all'?D.documents:D.documents.filter(function(d){return d.clientId===DOC_FILTER;});
+
+  if(!filtered.length){
+    h+='<div class="empty"><div class="empty-icon" style="font-size:32px">□</div><div class="empty-text">No documents yet. Add Google Drive links to clients and projects.</div></div>';
+  } else {
+    // Group by client
+    var grouped={};
+    filtered.forEach(function(doc){
+      var key=doc.clientId||'unassigned';
+      if(!grouped[key])grouped[key]=[];
+      grouped[key].push(doc);
+    });
+    var catIcons={Contract:'📋',Proposal:'📄',Budget:'💰',Invoice:'🧾','Creative Brief':'✏️','Marketing Plan':'📊','Pitch Deck':'📈','Production Files':'🎵','Release Plan':'🚀',Other:'📁'};
+    Object.keys(grouped).forEach(function(clientId){
+      var cl=clientById(clientId);
+      var docs=grouped[clientId];
+      h+='<div class="doc-client-section">';
+      h+='<div class="doc-client-hd"><div class="client-avatar" style="width:28px;height:28px;border-radius:6px;font-size:12px;background:'+(cl.color||'#3b82f6')+'20;color:'+(cl.color||'#3b82f6')+';margin-bottom:0;flex-shrink:0">'+((cl.name||'?')[0])+'</div><span class="doc-client-name">'+(cl.name||'Unassigned')+'</span><span class="badge badge-gray">'+docs.length+' doc'+(docs.length!==1?'s':'')+'</span></div>';
+      h+='<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Title</th><th>Category</th><th>Confidentiality</th><th>Added</th><th></th></tr></thead><tbody>';
+      docs.forEach(function(doc){
+        var icon=catIcons[doc.category]||'📁';
+        h+='<tr><td><div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px">'+icon+'</span><div><div class="doc-title">'+esc(doc.title)+'</div></div></div></td>'+
+          '<td><span class="badge badge-gray">'+esc(doc.category)+'</span></td>'+
+          '<td style="font-size:12px;color:var(--sub)">'+esc(doc.confidentiality)+'</td>'+
+          '<td style="font-size:11px;color:var(--mute);font-family:DM Mono,monospace">'+esc(doc.dateAdded)+'</td>'+
+          '<td>'+(doc.url?'<a class="doc-open" href="'+esc(doc.url)+'" target="_blank">Open ↗</a>':'<span style="font-size:11px;color:var(--mute)">No link</span>')+'</td></tr>';
+      });
+      h+='</tbody></table></div></div>';
+    });
+  }
+  document.getElementById('screen').innerHTML=h;
+  document.getElementById('screen').querySelectorAll('[data-filter]').forEach(function(btn){
+    btn.addEventListener('click',function(){DOC_FILTER='all';rDocuments();});
+  });
+  document.getElementById('screen').querySelectorAll('[data-filter-client]').forEach(function(btn){
+    btn.addEventListener('click',function(){DOC_FILTER=btn.getAttribute('data-filter-client');rDocuments();});
+  });
+}
+function rContacts(){document.getElementById('screen').innerHTML='<div class="page-header"><div class="page-title">Contacts</div></div><div class="empty"><div class="empty-icon">○</div><div class="empty-text">Contact directory coming soon</div></div>';}
+function rActivity(){
+  var h='<div class="page-header"><div class="page-title">Activity Log</div></div><div class="card">';
+  h+=D.activity.slice().reverse().map(function(a){return '<div class="activity-item"><div class="activity-dot"></div><div class="activity-text">'+esc(a.action)+'<div style="font-size:11px;color:var(--mute);margin-top:2px">'+esc(a.entity)+' &nbsp;·&nbsp; '+esc(a.user)+'</div></div><div class="activity-time">'+esc(a.timestamp)+'</div></div>';}).join('');
+  h+='</div>';
+  document.getElementById('screen').innerHTML=h;
+}
+function rSettings(){document.getElementById('screen').innerHTML='<div class="page-header"><div class="page-title">Settings</div></div><div class="card"><div class="sh"><h2>Connection</h2></div><div class="fin-row"><span class="fin-label">API</span><span class="fin-val" style="font-family:\'DM Mono\',monospace;font-size:11px">'+esc(API)+'</span></div><div class="fin-row"><span class="fin-label">Status</span><span id="settings-sv"></span></div></div>';}
+
+// ── ADD / EDIT MODALS ────────────────────────────────────────────────
+function mAddArtist(){
+  var repOpts=['exclusive','non-exclusive','strategic-partner','founder-owned','advisor'].map(function(r){return '<option value="'+r+'">'+r+'</option>';}).join('');
+  modal('Add Artist',
+    '<div class="form-row"><div class="form-group"><label class="form-label">Artist Name</label><input class="form-input" id="an" placeholder="Stage name"/></div><div class="form-group"><label class="form-label">Alias / Real Name</label><input class="form-input" id="aa" placeholder="Real name"/></div></div>'+
+    '<div class="form-row"><div class="form-group"><label class="form-label">Representation</label><select class="form-input" id="arep">'+repOpts+'</select></div><div class="form-group"><label class="form-label">Status</label><select class="form-input" id="ast2"><option value="active">Active</option><option value="inactive">Inactive</option><option value="on-hold">On Hold</option></select></div></div>'+
+    '<div class="form-group"><label class="form-label">Relationship</label><input class="form-input" id="ar" placeholder="Management relationship"/></div>'+
+    '<div class="form-group"><label class="form-label">Bio</label><textarea class="form-input" id="ab" style="height:70px" placeholder="Artist biography"></textarea></div>'+
+    '<div class="form-group"><label class="form-label">Strategy</label><textarea class="form-input" id="as" style="height:70px" placeholder="Career strategy"></textarea></div>'+
+    '<div class="modal-footer"><button class="btn btn-secondary" onclick="CM()">Cancel</button><button class="btn btn-primary" onclick="saveArtist()">Add Artist</button></div>');
+}
+function saveArtist(){
+  var name=V('an');if(!name)return;
+  var cl={id:uid(),name:name,type:'artist',relationship:V('ar'),status:V('ast2')||'active',representation:V('arep')||'exclusive',priority:'medium',color:'#8b5cf6',notes:''};
+  var ar={id:uid(),clientId:cl.id,name:name,alias:V('aa'),bio:V('ab'),strategy:V('as'),nextMilestone:'',focus:'',notes:''};
+  D.clients.push(cl);D.artists.push(ar);
+  logActivity('Added artist: '+name,'artist',ar.id);
+  upd({});CM();
+}
+
+function mAddProducer(){
+  modal('Add Producer',
+    '<div class="form-row"><div class="form-group"><label class="form-label">Name</label><input class="form-input" id="pn" placeholder="Producer name"/></div><div class="form-group"><label class="form-label">Role</label><input class="form-input" id="pr" placeholder="e.g. Producer / Mixer"/></div></div>'+
+    '<div class="form-group"><label class="form-label">Specialties</label><input class="form-input" id="ps" placeholder="Beat production, mixing, etc."/></div>'+
+    '<div class="form-group"><label class="form-label">Relationship</label><input class="form-input" id="prel" placeholder="Management relationship"/></div>'+
+    '<div class="modal-footer"><button class="btn btn-secondary" onclick="CM()">Cancel</button><button class="btn btn-primary" onclick="saveProducer()">Add Producer</button></div>');
+}
+function saveProducer(){
+  var name=V('pn');if(!name)return;
+  var cl={id:uid(),name:name,type:'producer',relationship:V('prel'),status:'active',priority:'medium',color:'#3b82f6',notes:''};
+  var pr={id:uid(),clientId:cl.id,name:name,role:V('pr'),specialties:V('ps'),notes:''};
+  D.clients.push(cl);D.producers.push(pr);
+  logActivity('Added producer: '+name,'producer',pr.id);
+  upd({});CM();
+}
+
+function mAddCreator(){
+  modal('Add Creator',
+    '<div class="form-row"><div class="form-group"><label class="form-label">Name</label><input class="form-input" id="cn" placeholder="Creator name"/></div><div class="form-group"><label class="form-label">Platforms</label><input class="form-input" id="cp" placeholder="YouTube, Twitch, etc."/></div></div>'+
+    '<div class="form-group"><label class="form-label">Relationship</label><input class="form-input" id="crel" placeholder="Management relationship"/></div>'+
+    '<div class="form-group"><label class="form-label">Focus</label><textarea class="form-input" id="cf" style="height:60px" placeholder="Focus areas"></textarea></div>'+
+    '<div class="modal-footer"><button class="btn btn-secondary" onclick="CM()">Cancel</button><button class="btn btn-primary" onclick="saveCreator()">Add Creator</button></div>');
+}
+function saveCreator(){
+  var name=V('cn');if(!name)return;
+  var cl={id:uid(),name:name,type:'creator',relationship:V('crel'),status:'active',priority:'medium',color:'#f59e0b',notes:''};
+  var cr={id:uid(),clientId:cl.id,name:name,platforms:V('cp'),focus:V('cf'),notes:''};
+  D.clients.push(cl);D.creators.push(cr);
+  logActivity('Added creator: '+name,'creator',cr.id);
+  upd({});CM();
+}
+
+function mAddFilmTV(){
+  modal('Add Film/TV Client',
+    '<div class="form-row"><div class="form-group"><label class="form-label">Name</label><input class="form-input" id="fn2" placeholder="Client name"/></div><div class="form-group"><label class="form-label">Relationship Type</label><select class="form-input" id="frel"><option>Management client</option><option>Non-exclusive strategic partner</option><option>Advisory</option></select></div></div>'+
+    '<div class="form-group"><label class="form-label">Focus</label><textarea class="form-input" id="ff" style="height:60px" placeholder="Focus areas"></textarea></div>'+
+    '<div class="form-group"><label class="form-label">Important Notes</label><input class="form-input" id="fn3" placeholder="e.g. Does not cover film/TV acting career"/></div>'+
+    '<div class="modal-footer"><button class="btn btn-secondary" onclick="CM()">Cancel</button><button class="btn btn-primary" onclick="saveFilmTV()">Add Client</button></div>');
+}
+function saveFilmTV(){
+  var name=V('fn2');if(!name)return;
+  var cl={id:uid(),name:name,type:'filmtv',relationship:V('frel'),status:'active',priority:'medium',color:'#f97316',notes:''};
+  var ft={id:uid(),clientId:cl.id,name:name,relationship:V('frel'),focus:V('ff'),notes:V('fn3')};
+  D.clients.push(cl);D.filmtv.push(ft);
+  logActivity('Added film/TV client: '+name,'filmtv',ft.id);
+  upd({});CM();
+}
+
+function mAddVenture(){
+  modal('Add Venture',
+    '<div class="form-row"><div class="form-group"><label class="form-label">Name</label><input class="form-input" id="vn" placeholder="Venture name"/></div><div class="form-group"><label class="form-label">Category</label><select class="form-input" id="vc"><option>Entertainment IP</option><option>Fashion / Consumer Brand</option><option>Technology</option><option>Creative Imprint</option><option>Social Impact</option><option>Live Experience</option><option>Other</option></select></div></div>'+
+    '<div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="vd" style="height:60px"></textarea></div>'+
+    '<div class="form-row"><div class="form-group"><label class="form-label">Partners</label><input class="form-input" id="vp" placeholder="Names of partners"/></div><div class="form-group"><label class="form-label">Stage</label><select class="form-input" id="vs"><option>Concept</option><option>Development</option><option>Active</option><option>Scaling</option></select></div></div>'+
+    '<div class="modal-footer"><button class="btn btn-secondary" onclick="CM()">Cancel</button><button class="btn btn-primary" onclick="saveVenture()">Add Venture</button></div>');
+}
+function saveVenture(){
+  var name=V('vn');if(!name)return;
+  var v={id:uid(),name:name,category:V('vc'),description:V('vd'),partners:V('vp'),stage:V('vs'),revenueModel:'',needs:'',notes:''};
+  D.ventures.push(v);
+  logActivity('Added venture: '+name,'venture',v.id);
+  upd({});CM();
+}
+
+function mEditVenture(id){
+  var v=D.ventures.find(function(x){return x.id===id;});
+  if(!v)return;
+  var catOpts=['Entertainment IP','Fashion / Consumer Brand','Technology','Creative Imprint','Social Impact','Live Experience','Other'].map(function(c){return '<option value="'+c+'"'+(v.category===c?' selected':'')+'>'+c+'</option>';}).join('');
+  var stageOpts=['Concept','Development','Active','Scaling'].map(function(s){return '<option value="'+s+'"'+(v.stage===s?' selected':'')+'>'+s+'</option>';}).join('');
+  modal('Edit Venture',
+    '<div class="form-row"><div class="form-group"><label class="form-label">Name</label><input class="form-input" id="evn" value="'+esc(v.name)+'"/></div><div class="form-group"><label class="form-label">Category</label><select class="form-input" id="evc">'+catOpts+'</select></div></div>'+
+    '<div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="evd" style="height:60px">'+esc(v.description)+'</textarea></div>'+
+    '<div class="form-row"><div class="form-group"><label class="form-label">Partners</label><input class="form-input" id="evp" value="'+esc(v.partners)+'"/></div><div class="form-group"><label class="form-label">Stage</label><select class="form-input" id="evs">'+stageOpts+'</select></div></div>'+
+    '<div class="form-group"><label class="form-label">Revenue Model</label><input class="form-input" id="evrm" value="'+esc(v.revenueModel||'')+'"/></div>'+
+    '<div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="evnotes" style="height:60px">'+esc(v.notes||'')+'</textarea></div>'+
+    '<div class="modal-footer"><button class="btn btn-danger" id="del-venture-btn">Delete</button><button class="btn btn-secondary" onclick="CM()">Cancel</button><button class="btn btn-primary" id="save-venture-edit-btn">Save</button></div>');
+  setTimeout(function(){
+    var sb=document.getElementById('save-venture-edit-btn');
+    if(sb)sb.addEventListener('click',function(){
+      D.ventures=D.ventures.map(function(x){
+        if(x.id!==id)return x;
+        return Object.assign({},x,{name:V('evn'),category:V('evc'),description:V('evd'),partners:V('evp'),stage:V('evs'),revenueModel:V('evrm'),notes:V('evnotes')});
+      });
+      logActivity('Updated venture: '+V('evn'),'venture',id);
+      upd({});CM();
+    });
+    var db=document.getElementById('del-venture-btn');
+    if(db)db.addEventListener('click',function(){
+      if(!confirm('Delete this venture?'))return;
+      D.ventures=D.ventures.filter(function(x){return x.id!==id;});
+      logActivity('Deleted venture: '+v.name,'venture',id);
+      upd({});CM();
+    });
+  },10);
+}
+
+function _dealTypeOpts(selected){
+  var out='';
+  DEAL_CATEGORIES.filter(function(c){return c.id!=='all';}).forEach(function(cat){
+    out+='<optgroup label="── '+cat.label+' ──">';
+    DEAL_TYPES.filter(function(t){return t.cat===cat.id;}).forEach(function(t){
+      out+='<option value="'+t.id+'"'+(t.id===selected?' selected':'')+'>'+t.label+'</option>';
+    });
+    out+='</optgroup>';
+  });
+  return out;
+}
+
+function _dealStageOpts(selected){
+  return DEAL_STAGES.map(function(s){return '<option value="'+s+'"'+(s===selected?' selected':'')+'>'+s+'</option>';}).join('');
+}
+
+function mAddDeal(prefillType){
+  var typeOpts=_dealTypeOpts(prefillType||'');
+  var stageOpts=_dealStageOpts('Prospect');
+  modal('New Deal',
+    '<div class="form-row">'+
+    '<div class="form-group"><label class="form-label">Deal Title</label><input class="form-input" id="dlt" placeholder="e.g. CXO Publishing Deal, Nike Campaign"/></div>'+
+    '<div class="form-group"><label class="form-label">Client</label><select class="form-input" id="dlc">'+D.clients.map(function(c){return '<option value="'+c.id+'">'+esc(c.name)+'</option>';}).join('')+'</select></div>'+
+    '</div>'+
+    '<div class="form-row">'+
+    '<div class="form-group"><label class="form-label">Deal Type</label><select class="form-input" id="dltype">'+typeOpts+'</select></div>'+
+    '<div class="form-group"><label class="form-label">Stage</label><select class="form-input" id="dlstage">'+stageOpts+'</select></div>'+
+    '</div>'+
+    '<div class="form-row">'+
+    '<div class="form-group"><label class="form-label">Deal Value ($)</label><input type="number" class="form-input" id="dlval" placeholder="Leave blank if TBD"/></div>'+
+    '<div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="dldate"/></div>'+
+    '</div>'+
+    '<div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="dlnotes" style="height:70px" placeholder="Key terms, counterparty, territory, royalty split, timeline..."></textarea></div>'+
+    '<div class="modal-footer"><button class="btn btn-secondary" onclick="CM()">Cancel</button><button class="btn btn-primary" id="save-deal-btn">Add Deal</button></div>',
+    600);
+  setTimeout(function(){
+    var sb=document.getElementById('save-deal-btn');
+    if(sb)sb.addEventListener('click',function(){
+      var title=V('dlt');if(!title)return;
+      var obj={id:uid(),clientId:V('dlc'),title:title,type:V('dltype'),stage:V('dlstage'),value:parseFloat(V('dlval'))||0,date:V('dldate'),notes:V('dlnotes')};
+      D.generaldeals.push(obj);
+      logActivity('Added deal: '+obj.title,'deal',obj.id);
+      upd({});CM();
+    });
+  },10);
+}
+
+// Unified edit — handles both D.deals (legacy) and D.generaldeals records
+function mEditUnifiedDeal(id,src){
+  var record, isLegacy=(src==='deals');
+  if(isLegacy){
+    var leg=D.deals.find(function(x){return x.id===id;});
+    if(!leg)return;
+    record={id:leg.id,clientId:leg.clientId,title:leg.brand||(leg.campaign||''),type:leg.dealType||'other',stage:leg.stage||'Prospect',value:leg.proposedFee||0,date:leg.date||'',notes:leg.notes||''};
+  } else {
+    record=D.generaldeals.find(function(x){return x.id===id;});
+    if(!record)return;
+  }
+  var typeOpts=_dealTypeOpts(record.type);
+  var stageOpts=_dealStageOpts(record.stage);
+  modal('Edit Deal',
+    '<div class="form-row">'+
+    '<div class="form-group"><label class="form-label">Deal Title</label><input class="form-input" id="edlt" value="'+esc(record.title)+'"/></div>'+
+    '<div class="form-group"><label class="form-label">Client</label><select class="form-input" id="edlc">'+D.clients.map(function(c){return '<option value="'+c.id+'"'+(c.id===record.clientId?' selected':'')+'>'+esc(c.name)+'</option>';}).join('')+'</select></div>'+
+    '</div>'+
+    '<div class="form-row">'+
+    '<div class="form-group"><label class="form-label">Deal Type</label><select class="form-input" id="edltype">'+typeOpts+'</select></div>'+
+    '<div class="form-group"><label class="form-label">Stage</label><select class="form-input" id="edlstage">'+stageOpts+'</select></div>'+
+    '</div>'+
+    '<div class="form-row">'+
+    '<div class="form-group"><label class="form-label">Deal Value ($)</label><input type="number" class="form-input" id="edlval" value="'+esc(record.value||0)+'"/></div>'+
+    '<div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="edldate" value="'+esc(record.date||'')+'"/></div>'+
+    '</div>'+
+    '<div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="edlnotes" style="height:70px">'+esc(record.notes||'')+'</textarea></div>'+
+    '<div class="modal-footer"><button class="btn btn-danger" id="del-udeal-btn">Delete</button><button class="btn btn-secondary" onclick="CM()">Cancel</button><button class="btn btn-primary" id="save-udeal-btn">Save</button></div>',
+    600);
+  setTimeout(function(){
+    var sb=document.getElementById('save-udeal-btn');
+    if(sb)sb.addEventListener('click',function(){
+      var updates={title:V('edlt'),clientId:V('edlc'),type:V('edltype'),stage:V('edlstage'),value:parseFloat(V('edlval'))||0,date:V('edldate'),notes:V('edlnotes')};
+      if(isLegacy){
+        D.deals=D.deals.map(function(x){
+          if(x.id!==id)return x;
+          return Object.assign({},x,{brand:updates.title,campaign:updates.title,dealType:updates.type,stage:updates.stage,proposedFee:updates.value,date:updates.date,notes:updates.notes,clientId:updates.clientId,status:updates.stage});
+        });
+      } else {
+        D.generaldeals=D.generaldeals.map(function(x){return x.id!==id?x:Object.assign({},x,updates);});
+      }
+      logActivity('Updated deal: '+updates.title,'deal',id);
+      upd({});CM();
+    });
+    var db=document.getElementById('del-udeal-btn');
+    if(db)db.addEventListener('click',function(){
+      if(!confirm('Delete this deal?'))return;
+      if(isLegacy){D.deals=D.deals.filter(function(x){return x.id!==id;});}
+      else{D.generaldeals=D.generaldeals.filter(function(x){return x.id!==id;});}
+      logActivity('Deleted deal','deal',id);
+      upd({});CM();
+    });
+  },10);
+}
+
+// Keep mEditDeal as alias for backwards compat (financials etc reference it)
+function mEditDeal(id){mEditUnifiedDeal(id,'deals');}
+function saveDeal(){} // stub — replaced by unified flow
+
+function mAddTask(clientId){
+  modal('Add Task',
+    '<div class="form-group"><label class="form-label">Title</label><input class="form-input" id="tt" placeholder="Task title"/></div>'+
+    '<div class="form-row"><div class="form-group"><label class="form-label">Client / Project</label><select class="form-input" id="tc2"><option value="">None</option>'+D.clients.map(function(c){return '<option value="'+c.id+'"'+(c.id===clientId?' selected':'')+'>'+esc(c.name)+'</option>';}).join('')+'</select></div><div class="form-group"><label class="form-label">Assignee</label><input class="form-input" id="ta" value="Daetrius"/></div></div>'+
+    '<div class="form-row"><div class="form-group"><label class="form-label">Due Date</label><input type="date" class="form-input" id="td2"/></div><div class="form-group"><label class="form-label">Priority</label><select class="form-input" id="tp"><option value="high">High</option><option value="medium" selected>Medium</option><option value="low">Low</option></select></div></div>'+
+    '<div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="tdesc" style="height:60px"></textarea></div>'+
+    '<div class="modal-footer"><button class="btn btn-secondary" onclick="CM()">Cancel</button><button class="btn btn-primary" onclick="saveTask()">Add Task</button></div>');
+}
+function saveTask(){
+  var title=V('tt');if(!title)return;
+  var t={id:uid(),clientId:V('tc2'),title:title,description:V('tdesc'),assignee:V('ta'),dueDate:V('td2'),priority:V('tp'),status:'todo',notes:''};
+  D.tasks.push(t);
+  logActivity('Added task: '+title,'task',t.id);
+  upd({});CM();
+}
+
+function mAddAlbum(artistId){
+  modal('Add Album',
+    '<div class="form-group"><label class="form-label">Title</label><input class="form-input" id="albt" placeholder="Album title"/></div>'+
+    '<div class="form-row"><div class="form-group"><label class="form-label">Year</label><input class="form-input" id="alby" placeholder="e.g. TBD or 2026"/></div><div class="form-group"><label class="form-label">Status</label><select class="form-input" id="albs"><option>in development</option><option>recording</option><option>mixing</option><option>mastered</option><option>released</option></select></div></div>'+
+    '<div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="albn" style="height:60px" placeholder="Do not fabricate release dates or budgets"></textarea></div>'+
+    '<div class="modal-footer"><button class="btn btn-secondary" onclick="CM()">Cancel</button><button class="btn btn-primary" onclick="saveAlbum(\''+artistId+'\',null)">Add Album</button></div>');
+}
+function mAddAlbumProducer(producerId){
+  modal('Add Album Collaboration',
+    '<div class="form-group"><label class="form-label">Album Title</label><input class="form-input" id="albt" placeholder="Album title"/></div>'+
+    '<div class="form-group"><label class="form-label">Artist</label><input class="form-input" id="alba" placeholder="Artist name"/></div>'+
+    '<div class="form-row"><div class="form-group"><label class="form-label">Year</label><input class="form-input" id="alby" placeholder="e.g. 2024"/></div><div class="form-group"><label class="form-label">Status</label><select class="form-input" id="albs"><option>completed</option><option>in development</option><option>recording</option></select></div></div>'+
+    '<div class="form-group"><label class="form-label">Work Done / Notes</label><textarea class="form-input" id="albn" style="height:60px" placeholder="e.g. Produced 8 beats, mixing. Fee: $60,000"></textarea></div>'+
+    '<div class="modal-footer"><button class="btn btn-secondary" onclick="CM()">Cancel</button><button class="btn btn-primary" onclick="saveAlbum(null,\''+producerId+'\')">Add Album</button></div>');
+}
+function saveAlbum(artistId,producerId){
+  var title=V('albt');if(!title)return;
+  var alb={id:uid(),artistId:artistId,producerId:producerId,title:title,artist:V('alba'),year:V('alby')||'TBD',status:V('albs'),notes:V('albn')};
+  D.albums.push(alb);
+  logActivity('Added album: '+title,'album',alb.id);
+  upd({});CM();
+}
+
+function mAddSong(producerId){
+  modal('Add Song Credit',
+    '<div class="form-row"><div class="form-group"><label class="form-label">Song Title</label><input class="form-input" id="sgt" placeholder="Song title (use Untitled if unknown)"/></div><div class="form-group"><label class="form-label">Artist</label><input class="form-input" id="sga" placeholder="Artist name"/></div></div>'+
+    '<div class="form-row"><div class="form-group"><label class="form-label">Type</label><select class="form-input" id="sgtype"><option value="beat">Beat</option><option value="mixing">Mixing</option><option value="both">Beat + Mixing</option></select></div><div class="form-group"><label class="form-label">Album / Standalone</label><input class="form-input" id="sgalb" value="Standalone"/></div></div>'+
+    '<div class="form-row"><div class="form-group"><label class="form-label">Fee</label><input class="form-input" id="sgfee" placeholder="Amount or unclear value e.g. 1.5"/></div><div class="form-group"><label class="form-label">Fee Status</label><select class="form-input" id="sgfs"><option value="proposed">Proposed</option><option value="needs-confirmation">Needs Confirmation</option><option value="agreed">Agreed</option><option value="invoiced">Invoiced</option><option value="collected">Collected</option></select></div></div>'+
+    '<div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="sgn" style="height:55px"></textarea></div>'+
+    '<div class="modal-footer"><button class="btn btn-secondary" onclick="CM()">Cancel</button><button class="btn btn-primary" onclick="saveSong(\''+producerId+'\')">Add Song</button></div>');
+}
+function saveSong(producerId){
+  var title=V('sgt')||'Untitled';
+  var type=V('sgtype');
+  var fee=parseFloat(V('sgfee'))||V('sgfee')||0;
+  var s={id:uid(),producerId:producerId,clientId:D.producers.find(function(p){return p.id===producerId;})?D.producers.find(function(p){return p.id===producerId;}).clientId:'',title:title,artist:V('sga'),album:V('sgalb'),type:type,beatFee:type==='beat'||type==='both'?fee:0,mixFee:type==='mixing'||type==='both'?fee:0,feeStatus:V('sgfs'),paymentStatus:'pending',notes:V('sgn')};
+  D.songs.push(s);
+  logActivity('Added song credit: '+title,'song',s.id);
+  upd({});CM();
+}
+
+function mAddDocument(){
+  modal('Add Document Link',
+    '<div class="form-group"><label class="form-label">Title</label><input class="form-input" id="doct" placeholder="Document title"/></div>'+
+    '<div class="form-group"><label class="form-label">URL</label><input class="form-input" id="docu" placeholder="https://docs.google.com/..."/></div>'+
+    '<div class="form-row"><div class="form-group"><label class="form-label">Category</label><select class="form-input" id="docc"><option>Contract</option><option>Proposal</option><option>Budget</option><option>Invoice</option><option>Creative Brief</option><option>Marketing Plan</option><option>Pitch Deck</option><option>Production Files</option><option>Release Plan</option><option>Other</option></select></div><div class="form-group"><label class="form-label">Client</label><select class="form-input" id="doccl"><option value="">None</option>'+D.clients.map(function(c){return '<option value="'+c.id+'">'+esc(c.name)+'</option>';}).join('')+'</select></div></div>'+
+    '<div class="form-group"><label class="form-label">Confidentiality</label><select class="form-input" id="docconf"><option>Internal</option><option>Confidential</option><option>Public</option></select></div>'+
+    '<div class="modal-footer"><button class="btn btn-secondary" onclick="CM()">Cancel</button><button class="btn btn-primary" onclick="saveDocument()">Add Document</button></div>');
+}
+function saveDocument(){
+  var doc={id:uid(),title:V('doct'),url:V('docu'),category:V('docc'),clientId:V('doccl'),projectId:'',confidentiality:V('docconf'),dateAdded:new Date().toISOString().split('T')[0],addedBy:'Daetrius',notes:''};
+  D.documents.push(doc);
+  logActivity('Added document: '+doc.title,'document',doc.id);
+  upd({});CM();
+}
+
+function logActivity(action,entity,entityId){
+  D.activity.push({id:uid(),timestamp:new Date().toISOString().split('T')[0],action:action,entity:entity,entityId:entityId,user:'Daetrius',notes:''});
+}
+
+// Edit client status/representation inline
+function mEditClientStatus(clientId){
+  var cl=D.clients.find(function(c){return c.id===clientId;});
+  if(!cl)return;
+  var repOpts=['exclusive','non-exclusive','strategic-partner','founder-owned','advisor'].map(function(r){
+    return '<option value="'+r+'"'+(cl.representation===r?' selected':'')+'>'+r+'</option>';
+  }).join('');
+  modal('Edit: '+cl.name,
+    '<div class="form-row">'+
+    '<div class="form-group"><label class="form-label">Status</label><select class="form-input" id="ecs">'+
+    ['active','inactive','on-hold'].map(function(s){return '<option value="'+s+'"'+(cl.status===s?' selected':'')+'>'+s+'</option>';}).join('')+
+    '</select></div>'+
+    '<div class="form-group"><label class="form-label">Representation</label><select class="form-input" id="ecr">'+repOpts+'</select></div>'+
+    '</div>'+
+    '<div class="form-group"><label class="form-label">Relationship Note</label><input class="form-input" id="ecrel" value="'+esc(cl.relationship||'')+'"/></div>'+
+    '<div class="form-group"><label class="form-label">Priority</label><select class="form-input" id="ecp">'+
+    ['high','medium','low'].map(function(p){return '<option value="'+p+'"'+(cl.priority===p?' selected':'')+'>'+p+'</option>';}).join('')+
+    '</select></div>'+
+    '<div class="modal-footer"><button class="btn btn-secondary" onclick="CM()">Cancel</button><button class="btn btn-primary" id="save-client-status-btn">Save</button></div>');
+  setTimeout(function(){var btn=document.getElementById('save-client-status-btn');if(btn)btn.addEventListener('click',function(){saveClientStatus(clientId);});},10);
+}
+
+function saveClientStatus(clientId){
+  D.clients=D.clients.map(function(c){
+    if(c.id!==clientId)return c;
+    return Object.assign({},c,{status:V('ecs'),representation:V('ecr'),relationship:V('ecrel'),priority:V('ecp')});
+  });
+  logActivity('Updated client status: '+clientById(clientId).name,'client',clientId);
+  upd({});CM();
+}
+
+// ── TABS HELPER ──────────────────────────────────────────────────────
+function wireTabs(containerId){
+  var container=document.getElementById(containerId);
+  if(!container)return;
+  container.querySelectorAll('.tab-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      container.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on');});
+      btn.classList.add('on');
+      var tab=btn.getAttribute('data-tab');
+      document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('on');});
+      var panel=document.getElementById(tab);
+      if(panel)panel.classList.add('on');
+    });
+  });
+}
+
+// ── 1DRM IMPRINT ─────────────────────────────────────────────────────
+var DRM_TAB = 'drm-overview';
+function r1DRM(){
+  var drmProjects=[
+    {name:'A Dae Chasing iNNOCENCE',artist:'nNocent',status:'in development',type:'Album'},
+    {name:'SESS1ONS',artist:'1DRM',status:'concept',type:'Live Experience'},
+    {name:'1RAISE',artist:'1DRM',status:'concept',type:'Social Impact'},
+    {name:'A1R',artist:'1DRM',status:'in development',type:'Visual Album'}
+  ];
+  var drmTeam=D.producers.concat([]).filter(function(p){return p.name==='Epikh Pro';}).concat(
+    D.artists.map(function(a){return {name:a.name,role:'Artist / Sound Architect'};})
+  );
+  var h='<div class="imprint-header">';
+  h+='<div style="font-size:10px;letter-spacing:.1em;color:rgba(255,255,255,.4);margin-bottom:8px;font-family:DM Mono,monospace">LFTD / 111 PARTNERS</div>';
+  h+='<div class="imprint-title">1DRM</div>';
+  h+='<div class="imprint-sub">Founder-owned creative ministry and cultural imprint &nbsp;·&nbsp; Daetrius &amp; Alex</div>';
+  h+='<div class="imprint-nav" id="drm-nav">';
+  var tabs2=[
+    {id:'drm-overview',label:'Overview'},
+    {id:'drm-artists',label:'Artists'},
+    {id:'drm-projects',label:'Projects'},
+    {id:'drm-releases',label:'Releases'},
+    {id:'drm-ventures',label:'Ventures'},
+    {id:'drm-financials',label:'Financials'},
+    {id:'drm-documents',label:'Documents'},
+    {id:'drm-tasks',label:'Tasks'}
+  ];
+  tabs2.forEach(function(tab){
+    h+='<button class="imprint-nav-btn'+(DRM_TAB===tab.id?' on':'')+'" data-drm-tab="'+tab.id+'">'+tab.label+'</button>';
+  });
+  h+='</div></div>';
+
+  // OVERVIEW
+  if(DRM_TAB==='drm-overview'){
+    h+='<div class="grid2">';
+    h+='<div class="card"><div class="sh"><h2>Imprint Identity</h2></div>';
+    h+='<div style="font-size:13px;color:var(--ink2);line-height:1.8">1DRM is a founder-owned creative ministry and cultural imprint. Faith-centered, culturally native. The intersection of Atlanta, R&amp;B, gospel, alternative, and cinematic hip-hop.</div>';
+    h+='<div style="margin-top:16px"><div style="font-size:11px;font-weight:600;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Core Ventures</div>';
+    h+='<div class="fin-row"><span class="fin-label">nNocent</span><span class="badge badge-purple">Artist</span></div>';
+    h+='<div class="fin-row"><span class="fin-label">A1R</span><span class="badge badge-blue">Visual Album</span></div>';
+    h+='<div class="fin-row"><span class="fin-label">1RAISE</span><span class="badge badge-green">Social Impact</span></div>';
+    h+='<div class="fin-row"><span class="fin-label">SESS1ONS</span><span class="badge badge-yellow">Live Experience</span></div>';
+    h+='</div></div>';
+    h+='<div><div class="card" style="margin-bottom:14px"><div class="sh"><h2>Team</h2></div>';
+    var team111=D.clients.filter(function(c){return ['cl1','cl2','cl3'].indexOf(c.id)!==-1;});
+    h+=team111.map(function(c){return '<div class="fin-row"><span class="fin-label" style="font-weight:600">'+esc(c.name)+'</span><span style="font-size:12px;color:var(--sub)">'+esc(c.relationship.split(';')[0])+'</span></div>';}).join('');
+    h+='<div class="fin-row"><span class="fin-label" style="font-weight:600">Alex</span><span style="font-size:12px;color:var(--sub)">Executive & Managing Partner</span></div>';
+    h+='<div class="fin-row"><span class="fin-label" style="font-weight:600">TY</span><span style="font-size:12px;color:var(--sub)">Partner / Executive Team</span></div>';
+    h+='</div>';
+    h+='<div class="card"><div class="sh"><h2>Active Projects</h2></div>';
+    h+=drmProjects.map(function(p){return '<div class="fin-row"><span class="fin-label">'+esc(p.name)+'</span>'+statusBadge(p.status)+'</div>';}).join('');
+    h+='</div></div></div>';
+  }
+
+  // ARTISTS
+  if(DRM_TAB==='drm-artists'){
+    h+='<div class="sh"><h2>1DRM Artists</h2><button class="btn btn-primary btn-sm" onclick="mAddArtist()">+ Add Artist</button></div>';
+    h+='<div class="grid-auto">';
+    D.artists.forEach(function(a){
+      var cl=clientById(a.clientId);
+      h+='<div class="client-card" data-nav-artist="'+a.id+'">'+ 
+        '<div class="client-avatar" style="background:'+(cl.color||'#8b5cf6')+'20;color:'+(cl.color||'#8b5cf6')+'">'+esc(a.name[0])+'</div>'+
+        '<div class="client-name">'+esc(a.name)+'</div>'+
+        '<div class="client-role">'+esc(a.alias||'')+'</div>'+
+        repBadge(cl.representation)+
+        '</div>';
+    });
+    h+='</div>';
+  }
+
+  // PROJECTS
+  if(DRM_TAB==='drm-projects'){
+    h+='<div class="sh"><h2>1DRM Projects</h2><button class="btn btn-primary btn-sm" id="drm-add-proj-btn">+ Add Project</button></div>';
+    h+='<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Project</th><th>Artist</th><th>Type</th><th>Status</th></tr></thead><tbody>';
+    h+=drmProjects.map(function(p){return '<tr><td><strong>'+esc(p.name)+'</strong></td><td>'+esc(p.artist)+'</td><td>'+esc(p.type)+'</td><td>'+statusBadge(p.status)+'</td></tr>';}).join('');
+    var extraAlbums=D.albums.filter(function(a){return a.artistId==='ar1';});
+    extraAlbums.forEach(function(a){h+='<tr><td><strong>'+esc(a.title)+'</strong></td><td>nNocent</td><td>Album</td><td>'+statusBadge(a.status)+'</td></tr>';});
+    h+='</tbody></table></div>';
+  }
+
+  // RELEASES
+  if(DRM_TAB==='drm-releases'){
+    h+='<div class="sh"><h2>Release Catalog</h2></div>';
+    var releases=D.albums.filter(function(a){return a.artistId==='ar1'||a.artistId===null;});
+    if(!releases.length){h+='<div class="empty"><div class="empty-icon">♪</div><div class="empty-text">No releases logged yet</div></div>';}
+    else{h+='<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Title</th><th>Year</th><th>Status</th><th>Notes</th></tr></thead><tbody>';
+    h+=releases.map(function(a){return '<tr><td><strong>'+esc(a.title)+'</strong></td><td>'+esc(a.year)+'</td><td>'+statusBadge(a.status)+'</td><td style="font-size:12px;color:var(--mute)">'+esc(a.notes.slice(0,60))+'</td></tr>';}).join('');
+    h+='</tbody></table></div>';}
+  }
+
+  // VENTURES
+  if(DRM_TAB==='drm-ventures'){
+    h+='<div class="sh"><h2>1DRM Ventures</h2></div>';
+    var drmV=D.ventures.filter(function(v){return v.partners.includes('Daetrius')||v.partners.includes('1DRM')||v.name==='1DRM';});
+    h+='<div class="grid-auto">';
+    drmV.forEach(function(v){
+      h+='<div class="card-sm"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><span class="badge badge-blue">'+esc(v.category)+'</span><span class="badge badge-'+(v.stage==='Active'?'green':'blue')+'">'+esc(v.stage)+'</span></div>'+
+        '<div style="font-weight:600;font-size:14px;margin-bottom:4px">'+esc(v.name)+'</div>'+
+        '<div style="font-size:12px;color:var(--sub)">'+esc(v.description.slice(0,80))+'</div>'+
+        '</div>';
+    });
+    h+='</div>';
+  }
+
+  // TASKS
+  if(DRM_TAB==='drm-tasks'){
+    var drmTasks=D.tasks.filter(function(t){return t.clientId==='cl1'||t.clientId==='cl3';});
+    h+='<div class="sh"><h2>1DRM Tasks</h2><button class="btn btn-primary btn-sm" id="drm-add-task-btn">+ Add Task</button></div>';
+    h+=renderTaskList(drmTasks);
+  }
+
+  // Financials + Documents  --  stub
+  if(DRM_TAB==='drm-financials'||DRM_TAB==='drm-documents'){
+    h+='<div class="empty"><div class="empty-text">Coming in Phase 3</div></div>';
+  }
+
+  document.getElementById('screen').innerHTML=h;
+  wireTaskList(document.getElementById('screen'));
+  document.getElementById('screen').querySelectorAll('[data-drm-tab]').forEach(function(btn){btn.addEventListener('click',function(){setDRMTab(btn.getAttribute('data-drm-tab'));});});
+  document.getElementById('screen').querySelectorAll('[data-nav-artist]').forEach(function(el){el.addEventListener('click',function(){go('artists',{detail:true,type:'artist',id:el.getAttribute('data-nav-artist')});});});
+  var dapb=document.getElementById('drm-add-proj-btn');if(dapb)dapb.addEventListener('click',function(){mAddAlbum('ar1');});
+  var datb=document.getElementById('drm-add-task-btn');if(datb)datb.addEventListener('click',function(){mAddTask('cl1');});
+}
+
+function setDRMTab(tab){DRM_TAB=tab;r1DRM();}
+
+// ── SEARCH ───────────────────────────────────────────────────────────
+document.getElementById('search-input').addEventListener('input',function(){
+  var q=this.value.trim().toLowerCase();
+  if(q.length<2)return;
+  var results=[];
+  D.clients.forEach(function(c){if(c.name.toLowerCase().includes(q))results.push({type:'Client',name:c.name,page:'dashboard'});});
+  D.songs.forEach(function(s){if(s.title.toLowerCase().includes(q)||s.artist.toLowerCase().includes(q))results.push({type:'Song',name:s.title+'  --  '+s.artist,page:'producers'});});
+  D.albums.forEach(function(a){if((a.title||'').toLowerCase().includes(q)||(a.artist||'').toLowerCase().includes(q))results.push({type:'Album',name:a.title,page:'producers'});});
+  D.ventures.forEach(function(v){if(v.name.toLowerCase().includes(q))results.push({type:'Venture',name:v.name,page:'ventures'});});
+  D.tasks.forEach(function(t){if(t.title.toLowerCase().includes(q))results.push({type:'Task',name:t.title,page:'tasks'});});
+  if(results.length){
+    var h='<div style="position:absolute;top:100%;left:0;right:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow2);z-index:100;max-height:280px;overflow-y:auto;margin-top:4px">';
+    h+=results.slice(0,8).map(function(r){return '<div style="padding:8px 14px;cursor:pointer;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:center" onclick="go(\''+r.page+'\')"><span class="badge badge-gray" style="font-size:10px">'+esc(r.type)+'</span><span style="font-size:13px">'+esc(r.name)+'</span></div>';}).join('');
+    h+='</div>';
+    var wrap=this.closest('.tb-search');
+    wrap.style.position='relative';
+    var existing=wrap.querySelector('[data-search-results]');
+    if(existing)existing.remove();
+    var el=document.createElement('div');el.setAttribute('data-search-results','1');el.innerHTML=h;
+    wrap.appendChild(el);
+  }
+});
+document.addEventListener('click',function(e){if(!e.target.closest('.tb-search'))document.querySelectorAll('[data-search-results]').forEach(function(el){el.remove();});});
+
+// ── SIDEBAR TOGGLE ───────────────────────────────────────────────────
+document.getElementById('sb-toggle').addEventListener('click',function(){document.getElementById('sb').classList.toggle('col');});
+
+// rGeneralDeals now just redirects to unified Deals page
+function rGeneralDeals(){rDeals();}
+
+// mAddGDeal / mEditGDeal — now delegate to unified deal system
+function mAddGDeal(clientId){mAddDeal();}
+function mEditGDeal(id){mEditUnifiedDeal(id,'generaldeals');}
+
+// ── TALENT PROFILES (flexible data input) ────────────────────────────
+// Each talent (client) has: notes, fields (custom key/value), links
+
+function mTalentProfile(clientId){
+  var cl=D.clients.find(function(c){return c.id===clientId;});
+  if(!cl)return;
+  var fields=cl.fields||[];
+  var links=cl.links||[];
+
+  var fieldsHtml=fields.map(function(f,i){
+    return '<div style="display:flex;gap:8px;margin-bottom:6px">'+
+      '<input class="form-input" style="flex:.8" value="'+esc(f.label)+'" placeholder="Label" data-findex="'+i+'" data-ftype="label"/>'+
+      '<input class="form-input" style="flex:1.2" value="'+esc(f.value)+'" placeholder="Value" data-findex="'+i+'" data-ftype="value"/>'+
+      '<button class="btn btn-danger btn-xs" data-del-field="'+i+'">✕</button>'+
+      '</div>';
+  }).join('');
+
+  var linksHtml=links.map(function(l,i){
+    return '<div style="display:flex;gap:8px;margin-bottom:6px">'+
+      '<input class="form-input" style="flex:.7" value="'+esc(l.label)+'" placeholder="Label (e.g. Instagram)" data-lindex="'+i+'" data-ltype="label"/>'+
+      '<input class="form-input" style="flex:1.3" value="'+esc(l.url)+'" placeholder="https://..." data-lindex="'+i+'" data-ltype="url"/>'+
+      '<button class="btn btn-danger btn-xs" data-del-link="'+i+'">✕</button>'+
+      '</div>';
+  }).join('');
+
+  modal('Profile: '+cl.name,
+    '<div class="form-group"><label class="form-label">Notes</label>'+
+    '<textarea class="form-input" id="talent-notes" style="height:90px" placeholder="Strategy, context, anything relevant...">'+esc(cl.notes||'')+'</textarea></div>'+
+
+    '<div class="form-group"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">'+
+    '<label class="form-label" style="margin:0">Custom Fields</label>'+
+    '<button class="btn btn-secondary btn-xs" id="add-field-btn">+ Field</button></div>'+
+    '<div id="fields-list">'+fieldsHtml+'</div></div>'+
+
+    '<div class="form-group"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">'+
+    '<label class="form-label" style="margin:0">Links</label>'+
+    '<button class="btn btn-secondary btn-xs" id="add-link-btn">+ Link</button></div>'+
+    '<div id="links-list">'+linksHtml+'</div></div>'+
+
+    '<div class="modal-footer"><button class="btn btn-secondary" onclick="CM()">Cancel</button><button class="btn btn-primary" id="save-talent-btn">Save Profile</button></div>',
+    600);
+
+  setTimeout(function(){
+    // Add field
+    var afb=document.getElementById('add-field-btn');
+    if(afb)afb.addEventListener('click',function(){
+      var fl=document.getElementById('fields-list');
+      var idx2=fl.children.length;
+      var div=document.createElement('div');
+      div.style.cssText='display:flex;gap:8px;margin-bottom:6px';
+      div.innerHTML='<input class="form-input" style="flex:.8" placeholder="Label" data-findex="'+idx2+'" data-ftype="label"/>'+
+        '<input class="form-input" style="flex:1.2" placeholder="Value" data-findex="'+idx2+'" data-ftype="value"/>'+
+        '<button class="btn btn-danger btn-xs" data-del-field="'+idx2+'">✕</button>';
+      fl.appendChild(div);
+      wireDeleteBtns();
+    });
+    // Add link
+    var alb=document.getElementById('add-link-btn');
+    if(alb)alb.addEventListener('click',function(){
+      var ll=document.getElementById('links-list');
+      var idx2=ll.children.length;
+      var div=document.createElement('div');
+      div.style.cssText='display:flex;gap:8px;margin-bottom:6px';
+      div.innerHTML='<input class="form-input" style="flex:.7" placeholder="Label (e.g. Instagram)" data-lindex="'+idx2+'" data-ltype="label"/>'+
+        '<input class="form-input" style="flex:1.3" placeholder="https://..." data-lindex="'+idx2+'" data-ltype="url"/>'+
+        '<button class="btn btn-danger btn-xs" data-del-link="'+idx2+'">✕</button>';
+      ll.appendChild(div);
+      wireDeleteBtns();
+    });
+    // Wire delete
+    function wireDeleteBtns(){
+      document.querySelectorAll('[data-del-field]').forEach(function(b){
+        b.onclick=function(){b.closest('div').remove();};
+      });
+      document.querySelectorAll('[data-del-link]').forEach(function(b){
+        b.onclick=function(){b.closest('div').remove();};
+      });
+    }
+    wireDeleteBtns();
+    // Save
+    var sb=document.getElementById('save-talent-btn');
+    if(sb)sb.addEventListener('click',function(){
+      // Collect fields
+      var newFields=[];
+      document.getElementById('fields-list').querySelectorAll('div').forEach(function(row){
+        var label=row.querySelector('[data-ftype="label"]');
+        var value=row.querySelector('[data-ftype="value"]');
+        if(label&&value&&(label.value||value.value)){
+          newFields.push({label:label.value,value:value.value});
+        }
+      });
+      // Collect links
+      var newLinks=[];
+      document.getElementById('links-list').querySelectorAll('div').forEach(function(row){
+        var label=row.querySelector('[data-ltype="label"]');
+        var url=row.querySelector('[data-ltype="url"]');
+        if(label&&url&&(label.value||url.value)){
+          newLinks.push({label:label.value,url:url.value});
+        }
+      });
+      D.clients=D.clients.map(function(c){
+        if(c.id!==clientId)return c;
+        return Object.assign({},c,{notes:V('talent-notes'),fields:newFields,links:newLinks});
+      });
+      logActivity('Updated profile: '+cl.name,'client',clientId);
+      upd({});CM();
+    });
+  },10);
+}
+
+// ── MOBILE TAB BAR ────────────────────────────────────────────────────
+function isMobile(){return window.innerWidth<=768;}
+
+document.querySelectorAll('[data-mob-tab]').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var page=btn.getAttribute('data-mob-tab');
+    if(page==='talent'){
+      goMobileTalent();
+    } else {
+      go(page);
+    }
+    document.querySelectorAll('[data-mob-tab]').forEach(function(b){b.classList.remove('on');});
+    btn.classList.add('on');
+  });
+});
+
+// Sync mobile tab highlight with nav
+var _origGo2=go;
+go=function(p,extra){
+  _origGo2(p,extra);
+  var tabMap={
+    dashboard:'dashboard',
+    tasks:'tasks',calendar:'tasks',documents:'tasks',contacts:'tasks',activity:'tasks',settings:'tasks',
+    artists:'talent',producers:'talent',creators:'talent',filmtv:'talent',
+    deals:'deals',generaldeals:'deals',financials:'deals',
+    ventures:'ventures','1drm':'ventures'
+  };
+  var active=tabMap[p]||'dashboard';
+  document.querySelectorAll('[data-mob-tab]').forEach(function(b){
+    b.classList.toggle('on',b.getAttribute('data-mob-tab')===active);
+  });
+};
+
+function goMobileTalent(){
+  PG='artists';
+  document.getElementById('tb-title').textContent='Talent';
+  rNav();
+  var h='<div class="page-header"><div class="page-title">Roster</div></div>';
+  var cats=[
+    {label:'Music Artists',page:'artists',icon:'♪',count:D.artists.length,color:'#8b5cf6'},
+    {label:'Producers',page:'producers',icon:'◈',count:D.producers.length,color:'#3b82f6'},
+    {label:'Creators',page:'creators',icon:'▶',count:D.creators.length,color:'#f59e0b'},
+    {label:'Film & TV',page:'filmtv',icon:'◉',count:D.filmtv.length,color:'#f97316'},
+    {label:'1DRM Imprint',page:'1drm',icon:'◈',count:0,color:'#1a1a2e'},
+    {label:'Ventures',page:'ventures',icon:'△',count:D.ventures.length,color:'#10b981'}
+  ];
+  h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">';
+  cats.forEach(function(c){
+    h+='<div class="card" style="cursor:pointer;text-align:center;padding:20px 12px" data-cat-page="'+c.page+'">'+
+      '<div style="font-size:26px;margin-bottom:8px;color:'+c.color+'">'+c.icon+'</div>'+
+      '<div style="font-weight:600;font-size:13px;margin-bottom:3px">'+c.label+'</div>'+
+      '<div style="font-size:11px;color:var(--mute)">'+c.count+' on roster</div>'+
+      '</div>';
+  });
+  h+='</div>';
+  var urgent=D.tasks.filter(function(t){return t.priority==='high'&&t.status!=='completed';});
+  if(urgent.length){
+    h+='<div class="card"><div class="sh"><h2>Priority Actions</h2><span class="badge badge-red">'+urgent.length+'</span></div>';
+    h+=renderTaskList(urgent.slice(0,5));
+    h+='</div>';
+  }
+  document.getElementById('screen').innerHTML=h;
+  document.getElementById('screen').querySelectorAll('[data-cat-page]').forEach(function(el){
+    el.addEventListener('click',function(){go(el.getAttribute('data-cat-page'));});
+  });
+  document.getElementById('screen').querySelectorAll('[data-tid]').forEach(function(el){
+    el.addEventListener('click',function(){toggleTask(el.getAttribute('data-tid'));});
+  });
+  document.getElementById('content').scrollTop=0;
+}
+
+// ── MOBILE HORIZONTAL SCROLL NAV (PILLS) ──────────────────────────────
+function syncPills(page){
+  document.querySelectorAll('[data-pill]').forEach(function(b){
+    b.classList.toggle('on',b.getAttribute('data-pill')===page);
+  });
+}
+document.querySelectorAll('[data-pill]').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var page=btn.getAttribute('data-pill');
+    go(page);
+    syncPills(page);
+  });
+});
+// Patch go() to also sync pills
+var _origGo3=go;
+go=function(p,extra){
+  _origGo3(p,extra);
+  syncPills(p);
+};
+
+// Search expand on mobile
+var searchEl=document.getElementById('search-input');
+if(searchEl){
+  searchEl.addEventListener('focus',function(){
+    if(isMobile())this.closest('.tb-search').classList.add('open');
+  });
+  document.addEventListener('click',function(e){
+    if(isMobile()&&!e.target.closest('.tb-search')){
+      var s=document.querySelector('.tb-search');
+      if(s){s.classList.remove('open');}
+    }
+  });
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────
+setSv('saved');
+rNav();
+(function(){
+  var cb='cb'+Date.now();
+  var sc=document.createElement('script');
+  var done=false;
+  var t=setTimeout(function(){if(!done){done=true;setSv('saved');R();}},6000);
+  window[cb]=function(res){
+    if(done)return;done=true;clearTimeout(t);
+    var hadData=false;
+    try{
+      if(res&&res.success&&res.data){
+        Object.keys(res.data).forEach(function(k){
+          if(res.data[k]&&Array.isArray(res.data[k])&&res.data[k].length>0){D[k]=res.data[k];hadData=true;}
+        });
+      }
+    }catch(e){}
+    if(!hadData)fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'batchUpdate',data:D})}).catch(function(){});
+    setSv('saved');R();
+    delete window[cb];if(sc.parentNode)sc.parentNode.removeChild(sc);
+  };
+  sc.onerror=function(){if(!done){done=true;setSv('saved');R();}};
+  sc.src=API+'?callback='+cb;
+  document.head.appendChild(sc);
+})();
+</script>
+</body>
+</html>
